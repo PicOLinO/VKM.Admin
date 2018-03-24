@@ -1,0 +1,10 @@
+D:\Source\VKM.Admin\VKM.Admin\bin\Debug\netcoreapp2.0\VKM.Admin.dll
+D:\Source\VKM.Admin\VKM.Admin\bin\Debug\netcoreapp2.0\VKM.Admin.deps.json
+D:\Source\VKM.Admin\VKM.Admin\bin\Debug\netcoreapp2.0\VKM.Admin.runtimeconfig.json
+D:\Source\VKM.Admin\VKM.Admin\bin\Debug\netcoreapp2.0\VKM.Admin.runtimeconfig.dev.json
+D:\Source\VKM.Admin\VKM.Admin\bin\Debug\netcoreapp2.0\VKM.Admin.pdb
+D:\Source\VKM.Admin\VKM.Admin\obj\Debug\netcoreapp2.0\VKM.Admin.csproj.CoreCompileInputs.cache
+D:\Source\VKM.Admin\VKM.Admin\obj\Debug\netcoreapp2.0\VKM.Admin.AssemblyInfoInputs.cache
+D:\Source\VKM.Admin\VKM.Admin\obj\Debug\netcoreapp2.0\VKM.Admin.AssemblyInfo.cs
+D:\Source\VKM.Admin\VKM.Admin\obj\Debug\netcoreapp2.0\VKM.Admin.dll
+D:\Source\VKM.Admin\VKM.Admin\obj\Debug\netcoreapp2.0\VKM.Admin.pdb
