@@ -1,16 +1,21 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<VKM.Admin.Models.Database.Team>
+@{
+    ViewData["Title"] = "Администраторская";
 }
 <div class="border">
     <div id="BaseTree">
         <ul>
-            <li>Root node 1
-                <ul>
-                    <li id="child_node_1">Child node 1</li>
-                    <li>Child node 2</li>
-                </ul>
-            </li>
-            <li>Root node 2</li>
+            @foreach (var team in Model)
+            {
+                <li>@team.Number
+                    <ul>
+                        @foreach (var student in team.Students)
+                        {
+                            <li>@student.FullName</li>
+                        }
+                    </ul>
+                </li>
+            }
         </ul>
     </div>
-    </div>
+</div>

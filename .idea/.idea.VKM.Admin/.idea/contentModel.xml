@@ -13,6 +13,11 @@
           <e p="HomeController.cs" t="Include" />
         </e>
         <e p="Models" t="Include">
+          <e p="Database" t="Include">
+            <e p="HistoryItem.cs" t="Include" />
+            <e p="Student.cs" t="Include" />
+            <e p="Team.cs" t="Include" />
+          </e>
           <e p="ErrorViewModel.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
@@ -23,6 +28,12 @@
           </e>
         </e>
         <e p="Program.cs" t="Include" />
+        <e p="Services" t="Include">
+          <e p="Interfaces" t="Include">
+            <e p="IDatabaseProvider.cs" t="Include" />
+          </e>
+          <e p="XmlDatabaseProvider.cs" t="Include" />
+        </e>
         <e p="Startup.cs" t="Include" />
         <e p="Views" t="Include">
           <e p="_ViewImports.cshtml" t="Include" />
