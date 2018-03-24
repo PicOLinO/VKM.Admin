@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VKM.Admin.Models;
 
 namespace VKM.Admin
 {
@@ -21,6 +22,9 @@ namespace VKM.Admin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var config = Configuration.GetSection("Config");
+            services.Configure<Config>(config);
+            
             services.AddMvc();
         }
 
@@ -35,7 +39,7 @@ namespace VKM.Admin
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            
             app.UseStaticFiles();
 
             app.UseMvc(routes =>

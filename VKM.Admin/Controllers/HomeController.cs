@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
 using VKM.Admin.Services;
 using VKM.Admin.Services.Interfaces;
@@ -12,11 +13,13 @@ namespace VKM.Admin.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly Config config;
         private readonly IDatabaseProvider databaseProvider;
         
-        public HomeController()
+        public HomeController(IOptions<Config> config)
         {
-            databaseProvider = new XmlDatabaseProvider(); //TODO: Set xml database path in ctor of XmlDatabaseProvider.
+            this.config = config.Value;
+            databaseProvider = new XmlDatabaseProvider(this.config.DatabasePath);
         }
         
         public IActionResult Index()

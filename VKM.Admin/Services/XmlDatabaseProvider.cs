@@ -6,6 +6,13 @@ namespace VKM.Admin.Services
 {
     public class XmlDatabaseProvider : IDatabaseProvider
     {
+        private readonly string databasePath;
+        
+        public XmlDatabaseProvider(string databasePath)
+        {
+            this.databasePath = databasePath;
+        }
+        
         public IEnumerable<Team> LoadAllTeams()
         {
             throw new System.NotImplementedException();
