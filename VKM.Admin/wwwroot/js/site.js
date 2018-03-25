@@ -5,12 +5,11 @@ $(function () {
         {
             "types": {
                 "team": {
-                    "icon": "glyphicon glyphicon-ok",
-                    "hover_node": false,
+                    "icon": "fas fa-users",
                     "valid_children": ["student"]
                 },
                 "student": {
-                    "icon": "glyphicon glyphicon-flash",
+                    "icon": "fas fa-user",
                     "valid_children": "none"
                 }
             },
@@ -22,10 +21,6 @@ $(function () {
     );
 });
 $('#BaseTree')
-
     .on('changed.jstree', function (e, data) {
         $('#SelectedStudent').html(data.instance.get_node(data.selected[0]).text);
-    })
-    .on('loaded.jstree', function (e, data) {
-        data.instance.set_type()
     });
