@@ -16,7 +16,6 @@ namespace VKM.Admin.Services
         public SqLiteDatabaseProvider(string databaseConnectionString)
         {
             var rootPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
-            
             this.databaseConnectionString = databaseConnectionString.Replace("|DataDirectory|", rootPath);
         }
         
@@ -80,27 +79,92 @@ namespace VKM.Admin.Services
 
         public void SaveTeam(int number)
         {
-            throw new System.NotImplementedException();
+            var sql = $"INSERT INTO [Teams] VALUES ({number})";
+            
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void UpdateTeam(Team team)
         {
-            throw new System.NotImplementedException();
+            var sql = $"UPDATE [Teams] SET [Number] = {team.Number} WHERE [ID] = {team.Id}";
+            
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public Student LoadStudentById(int studentId)
         {
-            throw new System.NotImplementedException();
+            var sql = $"SELECT * FROM [Students] WHERE [ID] = {studentId}";
+            
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        return new Student
+                        {
+                            Id = int.Parse(reader["ID"].ToString()),
+                            FirstName = reader["FirstName"].ToString(),
+                            LastName = reader["LastName"].ToString(),
+                            MiddleName = reader["MiddleName"].ToString(),
+                            Group = reader["UniversityGroup"].ToString(),
+                            AverageValue = double.Parse(reader["AverageScore"].ToString())
+                        };
+                    }
+                }
+            }
+
+            return null;
         }
 
-        public void SaveStudent(string firstName, string lastName, string middleName, Team team, string @group)
+        public void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId, double averageValue)
         {
-            throw new System.NotImplementedException();
+            var sql = $"INSERT INTO [Students] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
+            
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void UpdateStudent(Student student)
         {
-            throw new System.NotImplementedException();
+            var sql = $@"UPDATE [Students] SET  [FirstName] = {student.FirstName}, 
+                                                [LastName] = {student.LastName}, 
+                                                [MiddleName] = {student.MiddleName}, 
+                                                [UniversityGroup] = {student.Group}, 
+                                                [TeamID] = {student.Team.Id}, 
+                                                [AverageScore] = {student.AverageValue}
+                         WHERE [ID] = {student.Id}";
+            
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

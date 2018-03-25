@@ -9,7 +9,7 @@ namespace VKM.Admin.Services.Interfaces
         void SaveTeam(int number);
         void UpdateTeam(Team team);
         Student LoadStudentById(int studentId);
-        void SaveStudent(string firstName, string lastName, string middleName, Team team, string group);
+        void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId, double averageValue);
         void UpdateStudent(Student student);
     }
 }
