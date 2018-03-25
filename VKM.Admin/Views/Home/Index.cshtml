@@ -2,19 +2,18 @@
 @{
     ViewData["Title"] = "Администраторская";
 }
-<div class="container">
     <div class="row">
-        <div class="col-4">
+        <div class="col">
             <div class="border">
                 <div id="BaseTree">
                     <ul>
                         @foreach (var team in Model)
                         {
-                            <li>@team.Number
+                            <li data-jstree='{ "type" : "team"}'>@team.Number
                                 <ul>
                                     @foreach (var student in team.Students)
                                     {
-                                        <li>@student.FullName</li>
+                                        <li data-jstree='{ "type" : "student"}'>@student.FullName</li>
                                     }
                                 </ul>
                             </li>
@@ -23,23 +22,16 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="border">
-                    CurrentStudent
-                </div>
+        <div class="row w-75">
+            <div class="col-12 border">
+                <h2 id="SelectedStudent"></h2>
             </div>
-            <div class="w-100"></div>
-            <div class="col-5">
-                <div class="border">
-                    CurrentStudentData
-                </div>
+            <div class="col-4 border">
+                <p id="SelectedStudentData"></p>
+                CurrentStudentData
             </div>
-            <div class="col-7">
-                <div class="border">
-                    CurrentStudentHistory
-                </div>
+            <div class="col-8 border">
+                CurrentStudentHistory
             </div>
         </div>
     </div>
-</div>
