@@ -2,3 +2,5 @@
 .idea/
 *.*.iml
 VKM.Admin/App_Data/db.db
+VKM.Admin/bin/
+VKM.Admin/obj/
