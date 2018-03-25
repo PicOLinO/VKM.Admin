@@ -2,6 +2,6 @@
 {
     public class Config
     {
-        public string DatabasePath { get; set; }
+        public string DatabaseConnectionString { get; set; }
     }
 }

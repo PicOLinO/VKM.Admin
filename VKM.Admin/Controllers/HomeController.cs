@@ -19,7 +19,7 @@ namespace VKM.Admin.Controllers
         public HomeController(IOptions<Config> config)
         {
             this.config = config.Value;
-            databaseProvider = new XmlDatabaseProvider(this.config.DatabasePath);
+            databaseProvider = new SqLiteDatabaseProvider(this.config.DatabaseConnectionString);
         }
         
         public IActionResult Index()
