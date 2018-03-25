@@ -2,20 +2,44 @@
 @{
     ViewData["Title"] = "Администраторская";
 }
-<div class="border">
-    <div id="BaseTree">
-        <ul>
-            @foreach (var team in Model)
-            {
-                <li>@team.Number
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="border">
+                <div id="BaseTree">
                     <ul>
-                        @foreach (var student in team.Students)
+                        @foreach (var team in Model)
                         {
-                            <li>@student.FullName</li>
+                            <li>@team.Number
+                                <ul>
+                                    @foreach (var student in team.Students)
+                                    {
+                                        <li>@student.FullName</li>
+                                    }
+                                </ul>
+                            </li>
                         }
                     </ul>
-                </li>
-            }
-        </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="border">
+                    CurrentStudent
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-5">
+                <div class="border">
+                    CurrentStudentData
+                </div>
+            </div>
+            <div class="col-7">
+                <div class="border">
+                    CurrentStudentHistory
+                </div>
+            </div>
+        </div>
     </div>
 </div>
