@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
+using VKM.Admin.Models.Database;
 using VKM.Admin.Services;
 using VKM.Admin.Services.Interfaces;
 
@@ -24,9 +25,12 @@ namespace VKM.Admin.Controllers
         
         public IActionResult Index()
         {
-            var teams = databaseProvider.LoadAllTeams();
+            var viewContainer = new MainViewContainer
+            {
+                Teams = databaseProvider.LoadAllTeams()
+            };
             
-            return View(teams);
+            return View(viewContainer);
         }
 
         public IActionResult Error()
