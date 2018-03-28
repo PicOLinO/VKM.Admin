@@ -1,5 +1,5 @@
 ﻿@using VKM.Admin.Models.Database
-@model VKM.Admin.Models.Database.MainViewContainer
+@model MainViewContainer
 @{
     ViewData["Title"] = "Администраторская";
 }
@@ -28,7 +28,32 @@
                 <h2 id="SelectedStudent"></h2>
             </div>
             <div class="col-4 border">
-                CurrentStudentData
+                <div class="container">
+                    <div class="row">
+                        <div class="col">Фамилия:</div>
+                        <div class="col" id="CurrentStudentLastName"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Имя:</div>
+                        <div class="col" id="CurrentStudentFirstName"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Отчество:</div>
+                        <div class="col" id="CurrentStudentMiddleName"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Учебная группа:</div>
+                        <div class="col" id="CurrentStudentGroup"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Взвод:</div>
+                        <div class="col" id="CurrentStudentTeam"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">Средний балл:</div>
+                        <div class="col" id="CurrentStudentAverageValue"></div>
+                    </div>
+                </div>
             </div>
             <div class="col-8 border">
                 CurrentStudentHistory
