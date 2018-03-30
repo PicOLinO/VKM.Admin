@@ -48,4 +48,7 @@ function onStudentLoaded(view) {
                             '</td>' +
                         '</tr>');
         });
+
+    var studentContentControl = document.getElementById("StudentContent");
+    studentContentControl.style.visibility = "visible";
 }
