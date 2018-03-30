@@ -22,11 +22,11 @@ $(function () {
 });
 $("#BaseTree")
     .on("changed.jstree", function (e, data) {
-        var obj = { "id": data.node.data.jstree.id };
-        $.getJSON("/Home/Student", obj, onGetStudent);
+        var parameter = { "id": data.node.data.jstree.id };
+        $.getJSON("/Home/Student", parameter, onStudentLoaded);
     });
 
-function onGetStudent(student) {
+function onStudentLoaded(student) {
     $("#SelectedStudent").text(student.fullName);
     $("#CurrentStudentLastName").text(student.lastName);
     $("#CurrentStudentFirstName").text(student.firstName);
