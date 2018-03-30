@@ -27,14 +27,12 @@ namespace VKM.Admin.Services
                             [Students].[ID] as [StudentID],
                             [Students].[FirstName],
                             [Students].[LastName],
-                            [Students].[MiddleName],
-                            [Students].[UniversityGroup],
-                            [Students].[TeamID],
-                            [Students].[AverageScore] 
+                            [Students].[MiddleName]
                         FROM 
                             [Teams] 
                                 INNER JOIN [Students] 
                                     ON [Teams].[ID] = [Students].[TeamID]";
+
             var teams = new List<Team>();
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
@@ -62,10 +60,7 @@ namespace VKM.Admin.Services
                             Id = int.Parse(reader["StudentID"].ToString()),
                             FirstName = reader["FirstName"].ToString(),
                             LastName = reader["LastName"].ToString(),
-                            MiddleName = reader["MiddleName"].ToString(),
-                            Group = reader["UniversityGroup"].ToString(),
-                            AverageValue = double.Parse(reader["AverageScore"].ToString()),
-                            Team = currentTeam
+                            MiddleName = reader["MiddleName"].ToString()
                         };
                         
                         currentTeam.Students.Add(student);
@@ -107,7 +102,18 @@ namespace VKM.Admin.Services
 
         public Student LoadStudentById(int studentId)
         {
-            var sql = $"SELECT * FROM [Students] WHERE [ID] = {studentId}";
+            var sql = $@"SELECT [Students].[ID] as [StudentID],
+                                [Students].[FirstName],
+                                [Students].[LastName],
+                                [Students].[MiddleName],
+                                [Students].[UniversityGroup],
+                                [Students].[AverageScore],
+                                [Teams].[ID] as [TeamID],
+                                [Teams].[Number] as [TeamNumber]
+                            FROM [Students] 
+                            INNER JOIN [Teams] 
+                                ON [Students].[TeamID] = [Teams].[ID] 
+                            WHERE [Students].[ID] = {studentId}";
             
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
@@ -119,12 +125,17 @@ namespace VKM.Admin.Services
                     {
                         return new Student
                         {
-                            Id = int.Parse(reader["ID"].ToString()),
+                            Id = int.Parse(reader["StudentID"].ToString()),
                             FirstName = reader["FirstName"].ToString(),
                             LastName = reader["LastName"].ToString(),
                             MiddleName = reader["MiddleName"].ToString(),
                             Group = reader["UniversityGroup"].ToString(),
-                            AverageValue = double.Parse(reader["AverageScore"].ToString())
+                            AverageValue = double.Parse(reader["AverageScore"].ToString()),
+                            Team = new Team
+                                   {
+                                       Id = int.Parse(reader["TeamNumber"].ToString()),
+                                       Number = int.Parse(reader["TeamNumber"].ToString())
+                                   }
                         };
                     }
                 }

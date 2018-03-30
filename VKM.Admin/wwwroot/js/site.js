@@ -32,6 +32,6 @@ function onGetStudent(student) {
     $("#CurrentStudentFirstName").text(student.firstName);
     $("#CurrentStudentMiddleName").text(student.middleName);
     $("#CurrentStudentGroup").text(student.group);
-    $("#CurrentStudentTeam").text(student.team);
+    $("#CurrentStudentTeam").text(student.team.number);
     $("#CurrentStudentAverageValue").text(student.averageValue);
 }
