@@ -4,3 +4,6 @@
 VKM.Admin/App_Data/db.db
 VKM.Admin/bin/
 VKM.Admin/obj/
+/.vs
+/VKM.Admin/Properties/launchSettings.json
+/VKM.Admin/VKM.Admin.csproj.user

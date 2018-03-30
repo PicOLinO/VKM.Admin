@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
@@ -25,12 +21,9 @@ namespace VKM.Admin.Controllers
         
         public IActionResult Index()
         {
-            var viewContainer = new MainViewContainer
-            {
-                Teams = databaseProvider.LoadAllTeams()
-            };
+            var teams = databaseProvider.LoadAllTeams();
             
-            return View(viewContainer);
+            return View(teams);
         }
 
         public IActionResult Student(int id)

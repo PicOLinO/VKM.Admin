@@ -1,5 +1,5 @@
 ﻿@using VKM.Admin.Models.Database
-@model MainViewContainer
+@model IEnumerable<Team>
 @{
     ViewData["Title"] = "Администраторская";
 }
@@ -8,7 +8,7 @@
             <div class="border">
                 <div id="BaseTree">
                     <ul>
-                        @foreach (var team in Model.Teams)
+                        @foreach (var team in Model)
                         {
                             <li data-jstree='{ "type" : "team", "id": @team.Id }'>@team.Number взвод
                                 <ul>
