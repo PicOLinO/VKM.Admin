@@ -84,7 +84,7 @@ namespace VKM.Admin.Services
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
-                using (var cmd = new SqliteCommand(sql))
+                using (var cmd = new SqliteCommand(sql, connection))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -98,7 +98,7 @@ namespace VKM.Admin.Services
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
-                using (var cmd = new SqliteCommand(sql))
+                using (var cmd = new SqliteCommand(sql, connection))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -112,7 +112,7 @@ namespace VKM.Admin.Services
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
-                using (var cmd = new SqliteCommand(sql))
+                using (var cmd = new SqliteCommand(sql, connection))
                 {
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -140,7 +140,7 @@ namespace VKM.Admin.Services
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
-                using (var cmd = new SqliteCommand(sql))
+                using (var cmd = new SqliteCommand(sql, connection))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -160,7 +160,7 @@ namespace VKM.Admin.Services
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
-                using (var cmd = new SqliteCommand(sql))
+                using (var cmd = new SqliteCommand(sql, connection))
                 {
                     cmd.ExecuteNonQuery();
                 }

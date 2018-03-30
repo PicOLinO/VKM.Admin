@@ -24,10 +24,9 @@ $('#BaseTree')
     .on('changed.jstree', function (e, data) {
         $('#SelectedStudent').html(data.instance.get_node(data.selected[0]).text);
 
-        function onGetStudent() {
-            $('#CurrentStudentLastName').text(this.LastName)
+        function onGetStudent(student) {
+            $('#CurrentStudentLastName').text(student.lastname)
         }
 
-        var item = data.node.data.jstree.id;
-        $.getJSON("/Home/Student", item, onGetStudent)
+        $.getJSON("/Home/Student", data.node.data.jstree.id, onGetStudent)
     });
