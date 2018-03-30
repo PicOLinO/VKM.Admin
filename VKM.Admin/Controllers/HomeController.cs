@@ -33,6 +33,13 @@ namespace VKM.Admin.Controllers
             return View(viewContainer);
         }
 
+        public IActionResult Student(int id)
+        {
+            var student = databaseProvider.LoadStudentById(id);
+
+            return Json(student);
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
