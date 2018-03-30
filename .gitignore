@@ -7,3 +7,4 @@ VKM.Admin/obj/
 /.vs
 /VKM.Admin/Properties/launchSettings.json
 /VKM.Admin/VKM.Admin.csproj.user
+/VKM.Admin/App_Data/bak

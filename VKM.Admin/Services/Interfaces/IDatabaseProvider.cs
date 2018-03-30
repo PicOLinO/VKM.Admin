@@ -12,5 +12,6 @@ namespace VKM.Admin.Services.Interfaces
         void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId, double averageValue);
         void UpdateStudent(Student student);
         IEnumerable<HistoryItem> LoadHistoryByStudentId(int studentId);
+        void RemoveStudentById(int id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
@@ -34,6 +35,20 @@ namespace VKM.Admin.Controllers
             var json = new {Student = student, History = studentHistory};
 
             return Json(json);
+        }
+
+        public IActionResult RemoveStudent(int id)
+        {
+            try
+            {
+                databaseProvider.RemoveStudentById(id);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+            return Ok();
         }
 
         public IActionResult Error()

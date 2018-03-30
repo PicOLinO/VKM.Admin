@@ -39,32 +39,34 @@ namespace VKM.Admin.Services
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
                 {
-                    var reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        var teamId = int.Parse(reader["TeamID"].ToString());
-                        var currentTeam = teams.SingleOrDefault(t => t.Id == teamId);
-                        if (currentTeam is null)
+                        while (reader.Read())
                         {
-                            currentTeam = new Team
+                            var teamId = int.Parse(reader["TeamID"].ToString());
+                            var currentTeam = teams.SingleOrDefault(t => t.Id == teamId);
+                            if (currentTeam is null)
                             {
-                                Id = teamId,
-                                Number = int.Parse(reader["TeamNumber"].ToString()),
-                                Students = new List<Student>()
-                            };
-                            teams.Add(currentTeam);
+                                currentTeam = new Team
+                                              {
+                                                  Id = teamId,
+                                                  Number = int.Parse(reader["TeamNumber"].ToString()),
+                                                  Students = new List<Student>()
+                                              };
+                                teams.Add(currentTeam);
+                            }
+
+                            var student = new Student
+                                          {
+                                              Id = int.Parse(reader["StudentID"].ToString()),
+                                              FirstName = reader["FirstName"].ToString(),
+                                              LastName = reader["LastName"].ToString(),
+                                              MiddleName = reader["MiddleName"].ToString()
+                                          };
+
+                            currentTeam.Students.Add(student);
+
                         }
-                        
-                        var student = new Student
-                        {
-                            Id = int.Parse(reader["StudentID"].ToString()),
-                            FirstName = reader["FirstName"].ToString(),
-                            LastName = reader["LastName"].ToString(),
-                            MiddleName = reader["MiddleName"].ToString()
-                        };
-                        
-                        currentTeam.Students.Add(student);
-                        
                     }
                 }
             }
@@ -120,23 +122,25 @@ namespace VKM.Admin.Services
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
                 {
-                    var reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        return new Student
+                        while (reader.Read())
                         {
-                            Id = int.Parse(reader["StudentID"].ToString()),
-                            FirstName = reader["FirstName"].ToString(),
-                            LastName = reader["LastName"].ToString(),
-                            MiddleName = reader["MiddleName"].ToString(),
-                            Group = reader["UniversityGroup"].ToString(),
-                            AverageValue = double.Parse(reader["AverageScore"].ToString()),
-                            Team = new Team
+                            return new Student
                                    {
-                                       Id = int.Parse(reader["TeamNumber"].ToString()),
-                                       Number = int.Parse(reader["TeamNumber"].ToString())
-                                   }
-                        };
+                                       Id = int.Parse(reader["StudentID"].ToString()),
+                                       FirstName = reader["FirstName"].ToString(),
+                                       LastName = reader["LastName"].ToString(),
+                                       MiddleName = reader["MiddleName"].ToString(),
+                                       Group = reader["UniversityGroup"].ToString(),
+                                       AverageValue = double.Parse(reader["AverageScore"].ToString()),
+                                       Team = new Team
+                                              {
+                                                  Id = int.Parse(reader["TeamNumber"].ToString()),
+                                                  Number = int.Parse(reader["TeamNumber"].ToString())
+                                              }
+                                   };
+                        }
                     }
                 }
             }
@@ -192,21 +196,37 @@ namespace VKM.Admin.Services
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
                 {
-                    var reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        var historyItem = new HistoryItem
-                                          {
-                                              AlgorithmName = reader["Algorithm"].ToString(),
-                                              Date = DateTime.Parse(reader["Date"].ToString()),
-                                              Value = int.Parse(reader["Value"].ToString())
-                                          };
-                        history.Add(historyItem);
-                    }
+                        while (reader.Read())
+                        {
+                            var historyItem = new HistoryItem
+                                              {
+                                                  AlgorithmName = reader["Algorithm"].ToString(),
+                                                  Date = DateTime.Parse(reader["Date"].ToString()),
+                                                  Value = int.Parse(reader["Value"].ToString())
+                                              };
+                            history.Add(historyItem);
+                        }
+                    } 
                 }
             }
 
             return history;
+        }
+
+        public void RemoveStudentById(int id)
+        {
+            var sql = $@"DELETE FROM [Students] WHERE [ID] = {id}";
+
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

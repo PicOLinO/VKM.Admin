@@ -1,6 +1,10 @@
 ﻿$(function () {
     $("#BaseTree").jstree(
         {
+            "core": {
+                check_callback: true,
+                multiple: false
+            },
             "types": {
                 "team": {
                     "icon": "fas fa-users",
@@ -14,18 +18,74 @@
             "conditionalselect": function (node) {
                 return node.type !== "team";
             },
-            "plugins": ["conditionalselect", "sort", "wholerow", "unique", "types"]
+            "contextmenu": {
+                items: treeContextMenu
+            },
+            "plugins": ["conditionalselect", "sort", "wholerow", "unique", "types", "contextmenu"]
         }
     );
 });
 
+function treeContextMenu(node) {
+
+    var items = {
+        add: {
+            label: "Добавить",
+            action: function() {
+                //TODO:
+            }
+        },
+        remove: {
+            label: "Удалить",
+            action: function () {
+                if (confirm("Удалить студента?")) {
+                    $.ajax({
+                        url: "Home/RemoveStudent",
+                        data: {id: node.data.jstree.id},
+                        success: function(deletedId) {
+                            var nodeId = $("#BaseTree").jstree().get_selected()[0];
+                            var nodeForDelete = $("#BaseTree").jstree().get_node(nodeId);
+                            $("#BaseTree").jstree().delete_node(nodeForDelete);
+                        },
+                        statusCode: {
+                            404: function (content) { alert("Такой студент отсутствует в базе данных"); },
+                            500: function (content) { alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText); }
+                        },
+                        error: function (req, status, errorObj) {
+                            // handle status === "timeout"
+                            // handle other errors
+                        }
+                    })
+                }
+            }
+        },
+        update: {
+            label: "Изменить",
+            action: function () {
+                //TODO:
+            }
+        }
+    };
+
+    if (node.type === "student") {
+        delete items.add;
+    }
+
+    return items;
+}
+
 $("#BaseTree")
     .on("changed.jstree", function (e, data) {
-        var parameter = { "id": data.node.data.jstree.id };
+        var parameter = { id: data.node.data.jstree.id };
         $.getJSON("/Home/Student", parameter, onStudentLoaded);
     });
 
 function onStudentLoaded(view) {
+
+    if (view.student == null) {
+        return;
+    }
+
     $("#SelectedStudent").text(view.student.fullName);
 
     $("#CurrentStudentLastName").text(view.student.lastName);
