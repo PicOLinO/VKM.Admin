@@ -42,13 +42,12 @@ function treeContextMenu(node) {
                     $.ajax({
                         url: "Home/RemoveStudent",
                         data: {id: node.data.jstree.id},
-                        success: function(deletedId) {
+                        success: function() {
                             var nodeId = $("#BaseTree").jstree().get_selected()[0];
                             var nodeForDelete = $("#BaseTree").jstree().get_node(nodeId);
                             $("#BaseTree").jstree().delete_node(nodeForDelete);
                         },
                         statusCode: {
-                            404: function (content) { alert("Такой студент отсутствует в базе данных"); },
                             500: function (content) { alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText); }
                         },
                         error: function (req, status, errorObj) {
