@@ -1,6 +1,4 @@
-﻿// Write your JavaScript code.
-
-$(function () {
+﻿$(function () {
     $("#BaseTree").jstree(
         {
             "types": {
@@ -20,18 +18,34 @@ $(function () {
         }
     );
 });
+
 $("#BaseTree")
     .on("changed.jstree", function (e, data) {
         var parameter = { "id": data.node.data.jstree.id };
         $.getJSON("/Home/Student", parameter, onStudentLoaded);
     });
 
-function onStudentLoaded(student) {
-    $("#SelectedStudent").text(student.fullName);
-    $("#CurrentStudentLastName").text(student.lastName);
-    $("#CurrentStudentFirstName").text(student.firstName);
-    $("#CurrentStudentMiddleName").text(student.middleName);
-    $("#CurrentStudentGroup").text(student.group);
-    $("#CurrentStudentTeam").text(student.team.number);
-    $("#CurrentStudentAverageValue").text(student.averageValue);
+function onStudentLoaded(view) {
+    $("#SelectedStudent").text(view.student.fullName);
+
+    $("#CurrentStudentLastName").text(view.student.lastName);
+    $("#CurrentStudentFirstName").text(view.student.firstName);
+    $("#CurrentStudentMiddleName").text(view.student.middleName);
+    $("#CurrentStudentGroup").text(view.student.group);
+    $("#CurrentStudentTeam").text(view.student.team.number);
+    $("#CurrentStudentAverageValue").text(view.student.averageValue);
+
+    $('#CurrentStudentHistory').empty();
+    $.each(view.history,
+        function (index, value) {
+            $("#CurrentStudentHistory")
+                .append('<tr>' +
+                            '<td>' + value.date +
+                            '</td>' +
+                            '<td>' + value.value +
+                            '</td>' +
+                            '<td>' + value.algorithmName +
+                            '</td>' +
+                        '</tr>');
+        });
 }

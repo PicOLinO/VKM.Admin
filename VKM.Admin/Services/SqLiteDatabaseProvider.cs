@@ -177,5 +177,36 @@ namespace VKM.Admin.Services
                 }
             }
         }
+
+        public IEnumerable<HistoryItem> LoadHistoryByStudentId(int studentId)
+        {
+            var sql = $@"SELECT [Histories].[Algorithm],
+                                [Histories].[Date],
+                                [Histories].[Value]
+                            FROM [Histories]
+                            WHERE [Histories].[StudentID] = {studentId}";
+
+            var history = new List<HistoryItem>();
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var historyItem = new HistoryItem
+                                          {
+                                              AlgorithmName = reader["Algorithm"].ToString(),
+                                              Date = DateTime.Parse(reader["Date"].ToString()),
+                                              Value = int.Parse(reader["Value"].ToString())
+                                          };
+                        history.Add(historyItem);
+                    }
+                }
+            }
+
+            return history;
+        }
     }
 }

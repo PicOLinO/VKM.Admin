@@ -29,8 +29,11 @@ namespace VKM.Admin.Controllers
         public IActionResult Student(int id)
         {
             var student = databaseProvider.LoadStudentById(id);
+            var studentHistory = databaseProvider.LoadHistoryByStudentId(id);
 
-            return Json(student);
+            var json = new {Student = student, History = studentHistory};
+
+            return Json(json);
         }
 
         public IActionResult Error()
