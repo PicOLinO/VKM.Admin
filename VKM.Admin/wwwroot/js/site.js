@@ -61,7 +61,7 @@ function treeContextMenu(node) {
         update: {
             label: "Изменить",
             action: function () {
-                //TODO:
+                $('#EditStudentDialog').modal('show');
             }
         }
     };
@@ -77,6 +77,11 @@ $("#BaseTree")
     .on("changed.jstree", function (e, data) {
         var parameter = { id: data.node.data.jstree.id };
         $.getJSON("/Home/Student", parameter, onStudentLoaded);
+    });
+
+$('#EditStudentDialog')
+    .on('show.bs.modal', function (e, data) {
+        //TODO: Вызов ajax с получением данных по студенту. Заполнение модального диалога. + где-то тут callback по закрытию диалога (мб!)
     });
 
 function onStudentLoaded(view) {
