@@ -83,6 +83,10 @@ $("#BaseTree")
         $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
     });
 
+$('#EditStudentDialog').on('hidden.bs.modal', function (e) {
+    //TODO: Добавить обработку сохранения.
+});
+
 function onStudentLoadedFromJsTreeEditClicked(view) {
     if (view.student == null) {
         return;
