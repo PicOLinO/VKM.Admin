@@ -93,16 +93,15 @@ function onStudentLoadedFromJsTreeEditClicked(view) {
     $("#m_MiddleName").val(view.student.middleName);
     $("#m_Group").val(view.student.group);
 
-
-    $.getJSON("/Home/Teams", parameter, onTeamsLoadedFromJsTreeEditClicked);
+    $.getJSON("/Home/Teams", onTeamsLoadedFromJsTreeEditClicked);
 
 }
 
 function onTeamsLoadedFromJsTreeEditClicked(view) {
     $("#m_Team").empty();
-    $each();//TODO:
-    $("#m_Team").append(view.student.team.number);
-    //TODO: each в M_Team
+    $.each(view, function (index, value) {
+        $("#m_Team").append('<option>' + value.number + '</option>');
+    });
 }
 
 function onStudentLoadedFromJsTreeChanged(view) {
