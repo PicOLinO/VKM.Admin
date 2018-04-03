@@ -22,7 +22,7 @@ namespace VKM.Admin.Controllers
         
         public IActionResult Index()
         {
-            var teams = databaseProvider.LoadAllTeams();
+            var teams = databaseProvider.LoadTeamsAndStudents();
             
             return View(teams);
         }
@@ -35,6 +35,13 @@ namespace VKM.Admin.Controllers
             var json = new {Student = student, History = studentHistory};
 
             return Json(json);
+        }
+
+        public IActionResult Teams()
+        {
+            var teams = databaseProvider.LoadTeams();
+            
+            return Json(teams);
         }
 
         public IActionResult RemoveStudent(int id)

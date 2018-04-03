@@ -19,7 +19,7 @@ namespace VKM.Admin.Services
             this.databaseConnectionString = databaseConnectionString.Replace("|DataDirectory|", rootPath);
         }
         
-        public IEnumerable<Team> LoadAllTeams()
+        public IEnumerable<Team> LoadTeamsAndStudents()
         {
             var sql = @"SELECT 
                             [Teams].[ID] as [TeamID],
@@ -227,6 +227,39 @@ namespace VKM.Admin.Services
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        public IEnumerable<Team> LoadTeams()
+        {
+            var sql = @"SELECT 
+                            [Teams].[ID] as [TeamID],
+                            [Teams].[Number] as [TeamNumber]
+                        FROM 
+                            [Teams]";
+
+            var teams = new List<Team>();
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var team = new Team
+                                              {
+                                                  Id = int.Parse(reader["TeamID"].ToString()),
+                                                  Number = int.Parse(reader["TeamNumber"].ToString()),
+                                                  Students = new List<Student>()
+                                              };
+                            teams.Add(team);
+                        }
+                    }
+                }
+            }
+
+            return teams;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace VKM.Admin.Services.Interfaces
 {
     public interface IDatabaseProvider
     {
-        IEnumerable<Team> LoadAllTeams();
+        IEnumerable<Team> LoadTeamsAndStudents();
         void SaveTeam(int number);
         void UpdateTeam(Team team);
         Student LoadStudentById(int studentId);
@@ -13,5 +13,6 @@ namespace VKM.Admin.Services.Interfaces
         void UpdateStudent(Student student);
         IEnumerable<HistoryItem> LoadHistoryByStudentId(int studentId);
         void RemoveStudentById(int id);
+        IEnumerable<Team> LoadTeams();
     }
 }

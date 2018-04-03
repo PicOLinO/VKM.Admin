@@ -60,7 +60,11 @@ function treeContextMenu(node) {
         },
         update: {
             label: "Изменить",
-            action: function () {
+            action: function (data) {
+                var inst = $.jstree.reference(data.reference),
+                    obj = inst.get_node(data.reference);
+                var parameter = {id: obj.data.jstree.id};
+                $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeEditClicked);
                 $('#EditStudentDialog').modal('show');
             }
         }
@@ -76,15 +80,32 @@ function treeContextMenu(node) {
 $("#BaseTree")
     .on("changed.jstree", function (e, data) {
         var parameter = { id: data.node.data.jstree.id };
-        $.getJSON("/Home/Student", parameter, onStudentLoaded);
+        $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
     });
 
-$('#EditStudentDialog')
-    .on('show.bs.modal', function (e, data) {
-        //TODO: Вызов ajax с получением данных по студенту. Заполнение модального диалога. + где-то тут callback по закрытию диалога (мб!)
-    });
+function onStudentLoadedFromJsTreeEditClicked(view) {
+    if (view.student == null) {
+        return;
+    }
 
-function onStudentLoaded(view) {
+    $("#m_LastName").val(view.student.lastName);
+    $("#m_FirstName").val(view.student.firstName);
+    $("#m_MiddleName").val(view.student.middleName);
+    $("#m_Group").val(view.student.group);
+
+
+    $.getJSON("/Home/Teams", parameter, onTeamsLoadedFromJsTreeEditClicked);
+
+}
+
+function onTeamsLoadedFromJsTreeEditClicked(view) {
+    $("#m_Team").empty();
+    $each();//TODO:
+    $("#m_Team").append(view.student.team.number);
+    //TODO: each в M_Team
+}
+
+function onStudentLoadedFromJsTreeChanged(view) {
 
     if (view.student == null) {
         return;
