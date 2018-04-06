@@ -58,6 +58,14 @@ namespace VKM.Admin.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        public IActionResult UpdateStudent(Student student)
+        {
+            databaseProvider.UpdateStudent(student);
+
+            return Ok();
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});

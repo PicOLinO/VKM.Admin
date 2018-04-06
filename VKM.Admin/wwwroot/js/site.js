@@ -1,4 +1,7 @@
-﻿$(function () {
+﻿var jstreeSelectedItemId = -1;
+
+
+$(function () {
     $("#BaseTree").jstree(
         {
             "core": {
@@ -61,9 +64,7 @@ function treeContextMenu(node) {
         update: {
             label: "Изменить",
             action: function (data) {
-                var inst = $.jstree.reference(data.reference),
-                    obj = inst.get_node(data.reference);
-                var parameter = {id: obj.data.jstree.id};
+                var parameter = {id: jstreeSelectedItemId};
                 $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeEditClicked);
                 $('#EditStudentDialog').modal('show');
             }
@@ -79,12 +80,37 @@ function treeContextMenu(node) {
 
 $("#BaseTree")
     .on("changed.jstree", function (e, data) {
-        var parameter = { id: data.node.data.jstree.id };
+        jstreeSelectedItemId = data.node.data.jstree.id;
+        var parameter = {id: jstreeSelectedItemId};
         $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
     });
 
-$('#EditStudentDialog').on('hidden.bs.modal', function (e) {
-    //TODO: Добавить обработку сохранения.
+$('#m_SaveButton').click(function () {
+    var student = {
+        id: jstreeSelectedItemId,
+        firstName: $('#m_FirstName').val(),
+        lastName: $('#m_LastName').val(),
+        middleName: $('#m_MiddleName').val(),
+        group: $('#m_Group').val()
+    };
+    $.ajax({
+        url: "Home/UpdateStudent",
+        type: "POST",
+        dataType: "json",
+        success: function () {
+            alert('ok');
+        },
+        statusCode: {
+            500: function (content) {
+                alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText);
+            }
+        },
+        error: function (req, status, errorObj) {
+            // handle status === "timeout"
+            // handle other errors
+        },
+        data: student
+    })
 });
 
 function onStudentLoadedFromJsTreeEditClicked(view) {
@@ -128,13 +154,13 @@ function onStudentLoadedFromJsTreeChanged(view) {
         function (index, value) {
             $("#CurrentStudentHistory")
                 .append('<tr>' +
-                            '<td>' + value.date +
-                            '</td>' +
-                            '<td>' + value.value +
-                            '</td>' +
-                            '<td>' + value.algorithmName +
-                            '</td>' +
-                        '</tr>');
+                    '<td>' + value.date +
+                    '</td>' +
+                    '<td>' + value.value +
+                    '</td>' +
+                    '<td>' + value.algorithmName +
+                    '</td>' +
+                    '</tr>');
         });
 
     var studentContentControl = document.getElementById("StudentContent");
