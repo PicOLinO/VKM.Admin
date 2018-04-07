@@ -123,7 +123,10 @@ function onStudentLoadedFromJsTreeEditClicked(view) {
     $("#m_MiddleName").val(view.student.middleName);
     $("#m_Group").val(view.student.group);
 
-    $.getJSON("/Home/Teams", onTeamsLoadedFromJsTreeEditClicked);
+    $.getJSON("/Home/Teams", function (data) {
+        onTeamsLoadedFromJsTreeEditClicked(data);
+        $("#m_Team").val(view.student.team.id);
+    });
 }
 
 function onTeamsLoadedFromJsTreeEditClicked(view) {
