@@ -1,5 +1,4 @@
-﻿var jstreeSelectedItemId = -1;
-
+﻿var jstreeSelectedItem = {id: -1, type: undefined};
 
 $(function () {
     $("#BaseTree").jstree(
@@ -41,31 +40,37 @@ function treeContextMenu(node) {
         remove: {
             label: "Удалить",
             action: function () {
-                if (confirm("Удалить студента?")) {
-                    $.ajax({
-                        url: "Home/RemoveStudent",
-                        data: {id: node.data.jstree.id},
-                        success: function() {
-                            var nodeId = $("#BaseTree").jstree().get_selected()[0];
-                            var nodeForDelete = $("#BaseTree").jstree().get_node(nodeId);
-                            $("#BaseTree").jstree().delete_node(nodeForDelete);
-                        },
-                        statusCode: {
-                            500: function (content) { alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText); }
-                        },
-                        error: function (req, status, error) {
-                            alert(error);
-                        }
-                    })
+                if (jstreeSelectedItem.type === "student") {
+                    if (confirm("Удалить студента?")) {
+                        $.ajax({
+                            url: "Home/RemoveStudent",
+                            data: {id: node.data.jstree.id},
+                            success: function () {
+                                var nodeId = $("#BaseTree").jstree().get_selected()[0];
+                                var nodeForDelete = $("#BaseTree").jstree().get_node(nodeId);
+                                $("#BaseTree").jstree().delete_node(nodeForDelete);
+                            },
+                            statusCode: {
+                                500: function (content) {
+                                    alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText);
+                                }
+                            },
+                            error: function (req, status, error) {
+                                alert(error);
+                            }
+                        })
+                    }
                 }
             }
         },
         update: {
             label: "Изменить",
             action: function (data) {
-                var parameter = {id: jstreeSelectedItemId};
-                $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeEditClicked);
-                $('#EditStudentDialog').modal('show');
+                if (jstreeSelectedItem.type === "student") {
+                    var parameter = {id: jstreeSelectedItem.id};
+                    $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeEditClicked);
+                    $('#EditStudentDialog').modal('show');
+                }
             }
         }
     };
@@ -79,14 +84,14 @@ function treeContextMenu(node) {
 
 $("#BaseTree")
     .on("changed.jstree", function (e, data) {
-        jstreeSelectedItemId = data.node.data.jstree.id;
-        var parameter = {id: jstreeSelectedItemId};
+        jstreeSelectedItem = {id: data.node.data.jstree.id, type: data.node.data.jstree.type};
+        var parameter = {id: jstreeSelectedItem.id};
         $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
     });
 
 $('#m_SaveButton').click(function () {
     var student = {
-        id: jstreeSelectedItemId,
+        id: jstreeSelectedItem.id,
         firstName: $('#m_FirstName').val(),
         lastName: $('#m_LastName').val(),
         middleName: $('#m_MiddleName').val(),
