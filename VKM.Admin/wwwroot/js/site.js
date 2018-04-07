@@ -53,9 +53,8 @@ function treeContextMenu(node) {
                         statusCode: {
                             500: function (content) { alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText); }
                         },
-                        error: function (req, status, errorObj) {
-                            // handle status === "timeout"
-                            // handle other errors
+                        error: function (req, status, error) {
+                            alert(error);
                         }
                     })
                 }
@@ -106,7 +105,7 @@ $('#m_SaveButton').click(function () {
                 alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText);
             }
         },
-        error: function (req, status, errorObj) {
+        error: function (req, status, error) {
             alert(error);
         },
         data: student
