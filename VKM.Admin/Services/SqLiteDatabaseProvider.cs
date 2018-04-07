@@ -136,7 +136,7 @@ namespace VKM.Admin.Services
                                        AverageValue = double.Parse(reader["AverageScore"].ToString()),
                                        Team = new Team
                                               {
-                                                  Id = int.Parse(reader["TeamNumber"].ToString()),
+                                                  Id = int.Parse(reader["TeamID"].ToString()),
                                                   Number = int.Parse(reader["TeamNumber"].ToString())
                                               }
                                    };
@@ -164,12 +164,11 @@ namespace VKM.Admin.Services
 
         public void UpdateStudent(Student student)
         {
-            var sql = $@"UPDATE [Students] SET  [FirstName] = {student.FirstName}, 
-                                                [LastName] = {student.LastName}, 
-                                                [MiddleName] = {student.MiddleName}, 
-                                                [UniversityGroup] = {student.Group}, 
-                                                [TeamID] = {student.Team.Id}, 
-                                                [AverageScore] = {student.AverageValue}
+            var sql = $@"UPDATE [Students] SET  [FirstName] = '{student.FirstName}', 
+                                                [LastName] = '{student.LastName}', 
+                                                [MiddleName] = '{student.MiddleName}', 
+                                                [UniversityGroup] = '{student.Group}', 
+                                                [TeamID] = {student.Team.Id}
                          WHERE [ID] = {student.Id}";
             
             using (var connection = new SqliteConnection(databaseConnectionString))

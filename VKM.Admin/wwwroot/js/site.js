@@ -91,14 +91,15 @@ $('#m_SaveButton').click(function () {
         firstName: $('#m_FirstName').val(),
         lastName: $('#m_LastName').val(),
         middleName: $('#m_MiddleName').val(),
-        group: $('#m_Group').val()
+        group: $('#m_Group').val(),
+        team: {id: $('#m_Team').val()}
     };
     $.ajax({
         url: "Home/UpdateStudent",
         type: "POST",
-        dataType: "json",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
         success: function () {
-            alert('ok');
+            location.reload();
         },
         statusCode: {
             500: function (content) {
@@ -106,8 +107,7 @@ $('#m_SaveButton').click(function () {
             }
         },
         error: function (req, status, errorObj) {
-            // handle status === "timeout"
-            // handle other errors
+            alert(error);
         },
         data: student
     })
@@ -124,13 +124,12 @@ function onStudentLoadedFromJsTreeEditClicked(view) {
     $("#m_Group").val(view.student.group);
 
     $.getJSON("/Home/Teams", onTeamsLoadedFromJsTreeEditClicked);
-
 }
 
 function onTeamsLoadedFromJsTreeEditClicked(view) {
     $("#m_Team").empty();
     $.each(view, function (index, value) {
-        $("#m_Team").append('<option>' + value.number + '</option>');
+        $("#m_Team").append('<option value="' + value.id + '">' + value.number + '</option>');
     });
 }
 
