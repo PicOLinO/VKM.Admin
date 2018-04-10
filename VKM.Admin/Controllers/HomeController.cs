@@ -27,6 +27,8 @@ namespace VKM.Admin.Controllers
             return View(teams);
         }
 
+        #region Student
+
         public IActionResult Student(int id)
         {
             var student = databaseProvider.LoadStudentById(id);
@@ -37,20 +39,13 @@ namespace VKM.Admin.Controllers
             return Json(json);
         }
         
-        public IActionResult Team(int id)
+        public IActionResult UpdateStudent(Student student)
         {
-            var team = databaseProvider.LoadTeam(id);
+            databaseProvider.UpdateStudent(student);
 
-            return Json(team);
+            return Ok();
         }
-
-        public IActionResult Teams()
-        {
-            var teams = databaseProvider.LoadTeams();
-            
-            return Json(teams);
-        }
-
+        
         public IActionResult RemoveStudent(int id)
         {
             try
@@ -65,21 +60,41 @@ namespace VKM.Admin.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        public IActionResult UpdateStudent(Student student)
-        {
-            databaseProvider.UpdateStudent(student);
+        #endregion
 
-            return Ok();
+        #region Team
+
+        public IActionResult Team(int id)
+        {
+            var team = databaseProvider.LoadTeam(id);
+
+            return Json(team);
         }
 
-        [HttpPost]
+        public IActionResult Teams()
+        {
+            var teams = databaseProvider.LoadTeams();
+            
+            return Json(teams);
+        }
+        
         public IActionResult UpdateTeam(Team team)
         {
             databaseProvider.UpdateTeam(team);
 
             return Ok();
         }
+
+        public IActionResult RemoveTeam(int id)
+        {
+            databaseProvider.RemoveTeamById(id);
+
+            return Ok();
+        }
+
+        #endregion
+        
+        
 
         public IActionResult Error()
         {

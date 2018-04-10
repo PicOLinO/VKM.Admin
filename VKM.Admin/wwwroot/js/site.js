@@ -40,6 +40,25 @@ function treeContextMenu(node) {
         remove: {
             label: "Удалить",
             action: function () {
+                if (jstreeSelectedItem.type === "team") {
+                    if (confirm("Удалить взвод? Будут удалены все студенты в этом взводе...")) {
+                        $.ajax({
+                            url: "Home/RemoveTeam",
+                            data: {id: node.data.jstree.id},
+                            success: function () {
+                                location.reload();
+                            },
+                            statusCode: {
+                                500: function (content) {
+                                    alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText);
+                                }
+                            },
+                            error: function (req, status, error) {
+                                alert(error);
+                            }
+                        })
+                    }
+                }
                 if (jstreeSelectedItem.type === "student") {
                     if (confirm("Удалить студента?")) {
                         $.ajax({

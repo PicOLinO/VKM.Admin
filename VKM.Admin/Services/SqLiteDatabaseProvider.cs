@@ -286,5 +286,18 @@ namespace VKM.Admin.Services
             }
             return null;
         }
+
+        public void RemoveTeamById(int id)
+        {
+            var sql = $"DELETE FROM [Students] WHERE [TeamID] = {id}; DELETE FROM [Teams] WHERE [ID] = {id}";
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
