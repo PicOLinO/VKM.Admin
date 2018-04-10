@@ -66,10 +66,14 @@ function treeContextMenu(node) {
         update: {
             label: "Изменить",
             action: function (data) {
+                var parameter = {id: jstreeSelectedItem.id};
                 if (jstreeSelectedItem.type === "student") {
-                    var parameter = {id: jstreeSelectedItem.id};
-                    $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeEditClicked);
+                    $.getJSON("/Home/Student", parameter, onStudentEditClicked);
                     $('#EditStudentDialog').modal('show');
+                }
+                if (jstreeSelectedItem.type === "team") {
+                    $.getJSON("Home/Team", parameter, onTeamEditClicked);
+                    $('#EditTeamDialog').modal('show');
                 }
             }
         }
@@ -117,7 +121,7 @@ $('#m_SaveButton').click(function () {
     })
 });
 
-function onStudentLoadedFromJsTreeEditClicked(view) {
+function onStudentEditClicked(view) {
     if (view.student == null) {
         return;
     }
@@ -131,6 +135,11 @@ function onStudentLoadedFromJsTreeEditClicked(view) {
         onTeamsLoadedFromJsTreeEditClicked(data);
         $("#m_Team").val(view.student.team.id);
     });
+}
+
+function onTeamEditClicked(view) {
+    //TODO:
+    $("#m_TeamNumber").val(view.team.number);
 }
 
 function onTeamsLoadedFromJsTreeEditClicked(view) {
