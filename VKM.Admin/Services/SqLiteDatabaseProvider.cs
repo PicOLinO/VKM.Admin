@@ -12,13 +12,13 @@ namespace VKM.Admin.Services
     public class SqLiteDatabaseProvider : IDatabaseProvider
     {
         private readonly string databaseConnectionString;
-        
+
         public SqLiteDatabaseProvider(string databaseConnectionString)
         {
             var rootPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
             this.databaseConnectionString = databaseConnectionString.Replace("|DataDirectory|", rootPath);
         }
-        
+
         public IEnumerable<Team> LoadTeamsAndStudents()
         {
             var sql = @"SELECT 
@@ -48,21 +48,21 @@ namespace VKM.Admin.Services
                             if (currentTeam is null)
                             {
                                 currentTeam = new Team
-                                              {
-                                                  Id = teamId,
-                                                  Number = int.Parse(reader["TeamNumber"].ToString()),
-                                                  Students = new List<Student>()
-                                              };
+                                {
+                                    Id = teamId,
+                                    Number = int.Parse(reader["TeamNumber"].ToString()),
+                                    Students = new List<Student>()
+                                };
                                 teams.Add(currentTeam);
                             }
 
                             var student = new Student
-                                          {
-                                              Id = int.Parse(reader["StudentID"].ToString()),
-                                              FirstName = reader["FirstName"].ToString(),
-                                              LastName = reader["LastName"].ToString(),
-                                              MiddleName = reader["MiddleName"].ToString()
-                                          };
+                            {
+                                Id = int.Parse(reader["StudentID"].ToString()),
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                MiddleName = reader["MiddleName"].ToString()
+                            };
 
                             currentTeam.Students.Add(student);
 
@@ -77,7 +77,7 @@ namespace VKM.Admin.Services
         public void SaveTeam(int number)
         {
             var sql = $"INSERT INTO [Teams] VALUES ({number})";
-            
+
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
@@ -91,7 +91,7 @@ namespace VKM.Admin.Services
         public void UpdateTeam(Team team)
         {
             var sql = $"UPDATE [Teams] SET [Number] = {team.Number} WHERE [ID] = {team.Id}";
-            
+
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
@@ -116,7 +116,7 @@ namespace VKM.Admin.Services
                             INNER JOIN [Teams] 
                                 ON [Students].[TeamID] = [Teams].[ID] 
                             WHERE [Students].[ID] = {studentId}";
-            
+
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
@@ -127,19 +127,19 @@ namespace VKM.Admin.Services
                         while (reader.Read())
                         {
                             return new Student
-                                   {
-                                       Id = int.Parse(reader["StudentID"].ToString()),
-                                       FirstName = reader["FirstName"].ToString(),
-                                       LastName = reader["LastName"].ToString(),
-                                       MiddleName = reader["MiddleName"].ToString(),
-                                       Group = reader["UniversityGroup"].ToString(),
-                                       AverageValue = double.Parse(reader["AverageScore"].ToString()),
-                                       Team = new Team
-                                              {
-                                                  Id = int.Parse(reader["TeamID"].ToString()),
-                                                  Number = int.Parse(reader["TeamNumber"].ToString())
-                                              }
-                                   };
+                            {
+                                Id = int.Parse(reader["StudentID"].ToString()),
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                MiddleName = reader["MiddleName"].ToString(),
+                                Group = reader["UniversityGroup"].ToString(),
+                                AverageValue = double.Parse(reader["AverageScore"].ToString()),
+                                Team = new Team
+                                {
+                                    Id = int.Parse(reader["TeamID"].ToString()),
+                                    Number = int.Parse(reader["TeamNumber"].ToString())
+                                }
+                            };
                         }
                     }
                 }
@@ -148,10 +148,12 @@ namespace VKM.Admin.Services
             return null;
         }
 
-        public void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId, double averageValue)
+        public void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId,
+            double averageValue)
         {
-            var sql = $"INSERT INTO [Students] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
-            
+            var sql =
+                $"INSERT INTO [Students] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
+
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
@@ -170,7 +172,7 @@ namespace VKM.Admin.Services
                                                 [UniversityGroup] = '{student.Group}', 
                                                 [TeamID] = {student.Team.Id}
                          WHERE [ID] = {student.Id}";
-            
+
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
@@ -200,14 +202,14 @@ namespace VKM.Admin.Services
                         while (reader.Read())
                         {
                             var historyItem = new HistoryItem
-                                              {
-                                                  AlgorithmName = reader["Algorithm"].ToString(),
-                                                  Date = DateTime.Parse(reader["Date"].ToString()),
-                                                  Value = int.Parse(reader["Value"].ToString())
-                                              };
+                            {
+                                AlgorithmName = reader["Algorithm"].ToString(),
+                                Date = DateTime.Parse(reader["Date"].ToString()),
+                                Value = int.Parse(reader["Value"].ToString())
+                            };
                             history.Add(historyItem);
                         }
-                    } 
+                    }
                 }
             }
 
@@ -247,11 +249,11 @@ namespace VKM.Admin.Services
                         while (reader.Read())
                         {
                             var team = new Team
-                                              {
-                                                  Id = int.Parse(reader["TeamID"].ToString()),
-                                                  Number = int.Parse(reader["TeamNumber"].ToString()),
-                                                  Students = new List<Student>()
-                                              };
+                            {
+                                Id = int.Parse(reader["TeamID"].ToString()),
+                                Number = int.Parse(reader["TeamNumber"].ToString()),
+                                Students = new List<Student>()
+                            };
                             teams.Add(team);
                         }
                     }
@@ -259,6 +261,30 @@ namespace VKM.Admin.Services
             }
 
             return teams;
+        }
+
+        public Team LoadTeam(int id)
+        {
+            var sql = $"SELECT [Teams].[Number] as [TeamNumber] FROM [Teams] WHERE [Teams].[ID] = {id}";
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return new Team
+                            {
+                                Id = id,
+                                Number = int.Parse(reader["TeamNumber"].ToString())
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
         }
     }
 }

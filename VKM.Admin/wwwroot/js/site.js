@@ -17,9 +17,9 @@ $(function () {
                     "valid_children": "none"
                 }
             },
-            "conditionalselect": function (node) {
-                return node.type !== "team";
-            },
+            //"conditionalselect": function (node) {
+            //    return node.type !== "team";
+            //},
             "contextmenu": {
                 items: treeContextMenu
             },
@@ -89,8 +89,10 @@ function treeContextMenu(node) {
 $("#BaseTree")
     .on("changed.jstree", function (e, data) {
         jstreeSelectedItem = {id: data.node.data.jstree.id, type: data.node.data.jstree.type};
-        var parameter = {id: jstreeSelectedItem.id};
-        $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
+        if (jstreeSelectedItem.type === "student") {
+            var parameter = {id: jstreeSelectedItem.id};
+            $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
+        }
     });
 
 $('#m_SaveButton').click(function () {
@@ -121,6 +123,30 @@ $('#m_SaveButton').click(function () {
     })
 });
 
+$('#m_SaveTeamButton').click(function () {
+    var team = {
+        id: jstreeSelectedItem.id,
+        number: $('#m_TeamNumber').val()
+    };
+    $.ajax({
+        url: "Home/UpdateTeam",
+        type: "POST",
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
+        success: function () {
+            location.reload();
+        },
+        statusCode: {
+            500: function (content) {
+                alert("Необработанная ошибка на сервере. Обратитесь к разрабочтику \n\nТекст ошибки: " + content.responseText);
+            }
+        },
+        error: function (req, status, error) {
+            alert(error);
+        },
+        data: team
+    })
+});
+
 function onStudentEditClicked(view) {
     if (view.student == null) {
         return;
@@ -137,9 +163,8 @@ function onStudentEditClicked(view) {
     });
 }
 
-function onTeamEditClicked(view) {
-    //TODO:
-    $("#m_TeamNumber").val(view.team.number);
+function onTeamEditClicked(team) {
+    $("#m_TeamNumber").val(team.number);
 }
 
 function onTeamsLoadedFromJsTreeEditClicked(view) {

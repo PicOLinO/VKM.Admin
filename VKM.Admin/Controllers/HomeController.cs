@@ -36,6 +36,13 @@ namespace VKM.Admin.Controllers
 
             return Json(json);
         }
+        
+        public IActionResult Team(int id)
+        {
+            var team = databaseProvider.LoadTeam(id);
+
+            return Json(team);
+        }
 
         public IActionResult Teams()
         {
@@ -62,6 +69,14 @@ namespace VKM.Admin.Controllers
         public IActionResult UpdateStudent(Student student)
         {
             databaseProvider.UpdateStudent(student);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult UpdateTeam(Team team)
+        {
+            databaseProvider.UpdateTeam(team);
 
             return Ok();
         }

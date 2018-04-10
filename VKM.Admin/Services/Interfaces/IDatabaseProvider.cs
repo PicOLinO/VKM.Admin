@@ -14,5 +14,6 @@ namespace VKM.Admin.Services.Interfaces
         IEnumerable<HistoryItem> LoadHistoryByStudentId(int studentId);
         void RemoveStudentById(int id);
         IEnumerable<Team> LoadTeams();
+        Team LoadTeam(int id);
     }
 }
