@@ -77,29 +77,13 @@ namespace VKM.Admin.Services
         public void SaveTeam(int number)
         {
             var sql = $"INSERT INTO [Teams] VALUES ({number})";
-
-            using (var connection = new SqliteConnection(databaseConnectionString))
-            {
-                connection.Open();
-                using (var cmd = new SqliteCommand(sql, connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQueryInternal(sql);
         }
 
         public void UpdateTeam(Team team)
         {
             var sql = $"UPDATE [Teams] SET [Number] = {team.Number} WHERE [ID] = {team.Id}";
-
-            using (var connection = new SqliteConnection(databaseConnectionString))
-            {
-                connection.Open();
-                using (var cmd = new SqliteCommand(sql, connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQueryInternal(sql);
         }
 
         public Student LoadStudentById(int studentId)
@@ -151,17 +135,9 @@ namespace VKM.Admin.Services
         public void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId,
             double averageValue)
         {
-            var sql =
-                $"INSERT INTO [Students] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
+            var sql = $"INSERT INTO [Students] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
 
-            using (var connection = new SqliteConnection(databaseConnectionString))
-            {
-                connection.Open();
-                using (var cmd = new SqliteCommand(sql, connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQueryInternal(sql);
         }
 
         public void UpdateStudent(Student student)
@@ -173,14 +149,7 @@ namespace VKM.Admin.Services
                                                 [TeamID] = {student.Team.Id}
                          WHERE [ID] = {student.Id}";
 
-            using (var connection = new SqliteConnection(databaseConnectionString))
-            {
-                connection.Open();
-                using (var cmd = new SqliteCommand(sql, connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQueryInternal(sql);
         }
 
         public IEnumerable<HistoryItem> LoadHistoryByStudentId(int studentId)
@@ -219,15 +188,7 @@ namespace VKM.Admin.Services
         public void RemoveStudentById(int id)
         {
             var sql = $@"DELETE FROM [Students] WHERE [ID] = {id}";
-
-            using (var connection = new SqliteConnection(databaseConnectionString))
-            {
-                connection.Open();
-                using (var cmd = new SqliteCommand(sql, connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQueryInternal(sql);
         }
 
         public IEnumerable<Team> LoadTeams()
@@ -290,12 +251,61 @@ namespace VKM.Admin.Services
         public void RemoveTeamById(int id)
         {
             var sql = $"DELETE FROM [Students] WHERE [TeamID] = {id}; DELETE FROM [Teams] WHERE [ID] = {id}";
+            ExecuteNonQueryInternal(sql);
+        }
+
+        public int CreateTeam(Team team)
+        {
+            var sql = $"INSERT INTO [Teams] (Number) VALUES ({team.Number}) SELECT [ID] FROM [Teams] WHERE [ID] = (SELECT MAX(ID) FROM [Teams])";
+            
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
                 {
-                    cmd.ExecuteNonQuery();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return int.Parse(reader["ID"].ToString());
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+
+        public int CreateStudent(Student student)
+        {
+            var sql = $@"INSERT INTO [Students] (FirstName, LastName, MiddleName, UniversityGroup, TeamID) 
+                                VALUES ({student.FirstName}, {student.LastName}, {student.MiddleName}, {student.Group}, {student.Team.Id}) 
+                         SELECT [ID] FROM [Students] WHERE [ID] = (SELECT MAX(ID) FROM [Students])";
+            
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return int.Parse(reader["ID"].ToString());
+                        }
+                    }
+                }
+            }
+            return -1;
+        }
+
+        private int ExecuteNonQueryInternal(string sql)
+        {
+            using (var connection = new SqliteConnection(databaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    return cmd.ExecuteNonQuery();
                 }
             }
         }

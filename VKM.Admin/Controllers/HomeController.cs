@@ -38,6 +38,13 @@ namespace VKM.Admin.Controllers
 
             return Json(json);
         }
+
+        public IActionResult CreateStudent(Student student)
+        {
+            var id = databaseProvider.CreateStudent(student);
+
+            return Ok(id);
+        }
         
         public IActionResult UpdateStudent(Student student)
         {
@@ -76,6 +83,13 @@ namespace VKM.Admin.Controllers
             var teams = databaseProvider.LoadTeams();
             
             return Json(teams);
+        }
+
+        public IActionResult CreateTeam(Team team)
+        {
+            var id = databaseProvider.CreateTeam(team);
+
+            return Ok(id);
         }
         
         public IActionResult UpdateTeam(Team team)

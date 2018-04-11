@@ -31,9 +31,15 @@ $(function () {
 function treeContextMenu(node) {
 
     var items = {
-        add: {
-            label: "Добавить",
+        addStudent: {
+            label: "Добавить студента",
             action: function() {
+                //TODO:
+            }
+        },
+        addTeam: {
+            label: "Добавить взвод",
+            action: function () {
                 //TODO:
             }
         },
@@ -41,7 +47,7 @@ function treeContextMenu(node) {
             label: "Удалить",
             action: function () {
                 if (jstreeSelectedItem.type === "team") {
-                    if (confirm("Удалить взвод? Будут удалены все студенты в этом взводе...")) {
+                    if (confirm("Удалить взвод? Будут удалены все студенты этого взвода...")) {
                         $.ajax({
                             url: "Home/RemoveTeam",
                             data: {id: node.data.jstree.id},
@@ -99,7 +105,8 @@ function treeContextMenu(node) {
     };
 
     if (node.type === "student") {
-        delete items.add;
+        delete items.addStudent;
+        delete items.addTeam;
     }
 
     return items;

@@ -16,5 +16,7 @@ namespace VKM.Admin.Services.Interfaces
         IEnumerable<Team> LoadTeams();
         Team LoadTeam(int id);
         void RemoveTeamById(int id);
+        int CreateTeam(Team team);
+        int CreateStudent(Student student);
     }
 }
