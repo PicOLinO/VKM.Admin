@@ -211,7 +211,7 @@ function onStudentEditClicked(view) {
     $("#m_MiddleName").val(view.student.middleName);
     $("#m_Group").val(view.student.group);
 
-    loadTeamsInStudentModalDialog();
+    loadTeamsInStudentModalDialog(view);
 }
 
 function onTeamEditClicked(team) {
@@ -259,10 +259,15 @@ function resetModalDialogsFields() {
     $("#m_TeamNumber").empty();
 }
 
-function loadTeamsInStudentModalDialog() {
+function loadTeamsInStudentModalDialog(view) {
     $.getJSON("/Home/Teams", function (data) {
         onTeamsLoaded(data);
-        $("#m_Team").val(view.student.team.id);
+        if (jstreeSelectedItem.type === "student") {
+            $("#m_Team").val(view.student.team.id);
+        }
+        if (jstreeSelectedItem.type === "team") {
+            $("#m_Team").val(jstreeSelectedItem.id);
+        }
     });
 }
 
