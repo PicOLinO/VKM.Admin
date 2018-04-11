@@ -57,14 +57,7 @@ namespace VKM.Admin.Controllers
         
         public IActionResult RemoveStudent(int id)
         {
-            try
-            {
-                databaseProvider.RemoveStudentById(id);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            databaseProvider.RemoveStudentById(id);
 
             return Ok();
         }
