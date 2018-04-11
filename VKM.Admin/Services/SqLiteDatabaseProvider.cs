@@ -30,7 +30,7 @@ namespace VKM.Admin.Services
                             [Students].[MiddleName]
                         FROM 
                             [Teams] 
-                                INNER JOIN [Students] 
+                                LEFT JOIN [Students] 
                                     ON [Teams].[ID] = [Students].[TeamID]";
 
             var teams = new List<Team>();
@@ -56,16 +56,19 @@ namespace VKM.Admin.Services
                                 teams.Add(currentTeam);
                             }
 
-                            var student = new Student
+                            var studentId = reader["StudentID"].ToString();
+                            if (!string.IsNullOrEmpty(studentId))
                             {
-                                Id = int.Parse(reader["StudentID"].ToString()),
-                                FirstName = reader["FirstName"].ToString(),
-                                LastName = reader["LastName"].ToString(),
-                                MiddleName = reader["MiddleName"].ToString()
-                            };
+                                var student = new Student
+                                {
+                                    Id = int.Parse(studentId),
+                                    FirstName = reader["FirstName"].ToString(),
+                                    LastName = reader["LastName"].ToString(),
+                                    MiddleName = reader["MiddleName"].ToString()
+                                };
 
-                            currentTeam.Students.Add(student);
-
+                                currentTeam.Students.Add(student);
+                            }
                         }
                     }
                 }
@@ -256,7 +259,7 @@ namespace VKM.Admin.Services
 
         public int CreateTeam(Team team)
         {
-            var sql = $"INSERT INTO [Teams] (Number) VALUES ({team.Number}) SELECT [ID] FROM [Teams] WHERE [ID] = (SELECT MAX(ID) FROM [Teams])";
+            var sql = $"INSERT INTO [Teams] (Number) VALUES ({team.Number}); SELECT [ID] FROM [Teams] WHERE [ID] = (SELECT MAX(ID) FROM [Teams])";
             
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
@@ -278,7 +281,7 @@ namespace VKM.Admin.Services
         public int CreateStudent(Student student)
         {
             var sql = $@"INSERT INTO [Students] (FirstName, LastName, MiddleName, UniversityGroup, TeamID) 
-                                VALUES ({student.FirstName}, {student.LastName}, {student.MiddleName}, {student.Group}, {student.Team.Id}) 
+                                VALUES ('{student.FirstName}', '{student.LastName}', '{student.MiddleName}', '{student.Group}', {student.Team.Id}); 
                          SELECT [ID] FROM [Students] WHERE [ID] = (SELECT MAX(ID) FROM [Students])";
             
             using (var connection = new SqliteConnection(databaseConnectionString))

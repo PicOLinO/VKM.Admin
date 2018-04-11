@@ -34,13 +34,20 @@ function treeContextMenu(node) {
         addStudent: {
             label: "Добавить студента",
             action: function() {
-                //TODO:
+                $("#m_SaveStudentButton").hide();
+                $("#m_AddStudentButton").show();
+                resetModalDialogsFields();
+                loadTeamsInStudentModalDialog();
+                $("#EditStudentDialog").modal('show');
             }
         },
         addTeam: {
             label: "Добавить взвод",
             action: function () {
-                //TODO:
+                $("#m_SaveTeamButton").hide();
+                $("#m_AddTeamButton").show();
+                resetModalDialogsFields();
+                $("#EditTeamDialog").modal('show');
             }
         },
         remove: {
@@ -94,10 +101,14 @@ function treeContextMenu(node) {
                 var parameter = {id: jstreeSelectedItem.id};
                 if (jstreeSelectedItem.type === "student") {
                     $.getJSON("/Home/Student", parameter, onStudentEditClicked);
+                    $("#m_SaveStudentButton").show();
+                    $("#m_AddStudentButton").hide();
                     $('#EditStudentDialog').modal('show');
                 }
                 if (jstreeSelectedItem.type === "team") {
                     $.getJSON("Home/Team", parameter, onTeamEditClicked);
+                    $("#m_SaveTeamButton").show();
+                    $("#m_AddTeamButton").hide();
                     $('#EditTeamDialog').modal('show');
                 }
             }
@@ -119,9 +130,19 @@ $("#BaseTree")
             var parameter = {id: jstreeSelectedItem.id};
             $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
         }
+        if (jstreeSelectedItem.type === "team") {
+            $("#StudentContent").hide();
+        }
     });
 
-$('#m_SaveButton').click(function () {
+$('#m_SaveStudentButton').click(function () {
+    addOrUpdateStudent("UpdateStudent");
+});
+$('#m_AddStudentButton').click(function () {
+    addOrUpdateStudent("CreateStudent");
+});
+
+function addOrUpdateStudent(controller) {
     var student = {
         id: jstreeSelectedItem.id,
         firstName: $('#m_FirstName').val(),
@@ -131,7 +152,7 @@ $('#m_SaveButton').click(function () {
         team: {id: $('#m_Team').val()}
     };
     $.ajax({
-        url: "Home/UpdateStudent",
+        url: "Home/" + controller,
         type: "POST",
         contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
         success: function () {
@@ -147,15 +168,22 @@ $('#m_SaveButton').click(function () {
         },
         data: student
     })
-});
+}
 
 $('#m_SaveTeamButton').click(function () {
+    addOrUpdateTeam("UpdateTeam");
+});
+$('#m_AddTeamButton').click(function () {
+    addOrUpdateTeam("CreateTeam");
+});
+
+function addOrUpdateTeam(controller) {
     var team = {
         id: jstreeSelectedItem.id,
         number: $('#m_TeamNumber').val()
     };
     $.ajax({
-        url: "Home/UpdateTeam",
+        url: "Home/" + controller,
         type: "POST",
         contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
         success: function () {
@@ -171,7 +199,7 @@ $('#m_SaveTeamButton').click(function () {
         },
         data: team
     })
-});
+}
 
 function onStudentEditClicked(view) {
     if (view.student == null) {
@@ -183,21 +211,11 @@ function onStudentEditClicked(view) {
     $("#m_MiddleName").val(view.student.middleName);
     $("#m_Group").val(view.student.group);
 
-    $.getJSON("/Home/Teams", function (data) {
-        onTeamsLoadedFromJsTreeEditClicked(data);
-        $("#m_Team").val(view.student.team.id);
-    });
+    loadTeamsInStudentModalDialog();
 }
 
 function onTeamEditClicked(team) {
     $("#m_TeamNumber").val(team.number);
-}
-
-function onTeamsLoadedFromJsTreeEditClicked(view) {
-    $("#m_Team").empty();
-    $.each(view, function (index, value) {
-        $("#m_Team").append('<option value="' + value.id + '">' + value.number + '</option>');
-    });
 }
 
 function onStudentLoadedFromJsTreeChanged(view) {
@@ -229,6 +247,28 @@ function onStudentLoadedFromJsTreeChanged(view) {
                     '</tr>');
         });
 
-    var studentContentControl = document.getElementById("StudentContent");
-    studentContentControl.style.visibility = "visible";
+    $("#StudentContent").show();
+}
+
+function resetModalDialogsFields() {
+    $("#m_LastName").empty();
+    $("#m_FirstName").empty();
+    $("#m_MiddleName").empty();
+    $("#m_Group").empty();
+    $("#m_Team").empty();
+    $("#m_TeamNumber").empty();
+}
+
+function loadTeamsInStudentModalDialog() {
+    $.getJSON("/Home/Teams", function (data) {
+        onTeamsLoaded(data);
+        $("#m_Team").val(view.student.team.id);
+    });
+}
+
+function onTeamsLoaded(view) {
+    $("#m_Team").empty();
+    $.each(view, function (index, value) {
+        $("#m_Team").append('<option value="' + value.id + '">' + value.number + '</option>');
+    });
 }
