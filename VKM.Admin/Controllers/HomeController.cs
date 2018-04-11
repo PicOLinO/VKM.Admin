@@ -13,11 +13,13 @@ namespace VKM.Admin.Controllers
     {
         private readonly Config config;
         private readonly IDatabaseProvider databaseProvider;
+        private readonly IAuthorizationService authorizationService;
         
         public HomeController(IOptions<Config> config)
         {
             this.config = config.Value;
             databaseProvider = new SqLiteDatabaseProvider(this.config.DatabaseConnectionString);
+            authorizationService = new AuthorizationService();
         }
         
         public IActionResult Index()
