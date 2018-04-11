@@ -50,6 +50,24 @@ function treeContextMenu(node) {
                 $("#EditTeamDialog").modal('show');
             }
         },
+        update: {
+            label: "Изменить",
+            action: function (data) {
+                var parameter = {id: jstreeSelectedItem.id};
+                if (jstreeSelectedItem.type === "student") {
+                    $.getJSON("/Home/Student", parameter, onStudentEditClicked);
+                    $("#m_SaveStudentButton").show();
+                    $("#m_AddStudentButton").hide();
+                    $('#EditStudentDialog').modal('show');
+                }
+                if (jstreeSelectedItem.type === "team") {
+                    $.getJSON("Home/Team", parameter, onTeamEditClicked);
+                    $("#m_SaveTeamButton").show();
+                    $("#m_AddTeamButton").hide();
+                    $('#EditTeamDialog').modal('show');
+                }
+            }
+        },
         remove: {
             label: "Удалить",
             action: function () {
@@ -92,24 +110,6 @@ function treeContextMenu(node) {
                             }
                         })
                     }
-                }
-            }
-        },
-        update: {
-            label: "Изменить",
-            action: function (data) {
-                var parameter = {id: jstreeSelectedItem.id};
-                if (jstreeSelectedItem.type === "student") {
-                    $.getJSON("/Home/Student", parameter, onStudentEditClicked);
-                    $("#m_SaveStudentButton").show();
-                    $("#m_AddStudentButton").hide();
-                    $('#EditStudentDialog').modal('show');
-                }
-                if (jstreeSelectedItem.type === "team") {
-                    $.getJSON("Home/Team", parameter, onTeamEditClicked);
-                    $("#m_SaveTeamButton").show();
-                    $("#m_AddTeamButton").hide();
-                    $('#EditTeamDialog').modal('show');
                 }
             }
         }
