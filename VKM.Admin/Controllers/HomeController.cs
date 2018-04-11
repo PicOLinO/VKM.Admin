@@ -22,6 +22,7 @@ namespace VKM.Admin.Controllers
             authorizationService = new AuthorizationService();
         }
         
+        [HttpGet]
         public IActionResult Index()
         {
             var teams = databaseProvider.LoadTeamsAndStudents();
