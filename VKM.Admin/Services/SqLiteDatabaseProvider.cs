@@ -22,16 +22,16 @@ namespace VKM.Admin.Services
         public IEnumerable<Team> LoadTeamsAndStudents()
         {
             var sql = @"SELECT 
-                            [Teams].[ID] as [TeamID],
-                            [Teams].[Number] as [TeamNumber],
-                            [Students].[ID] as [StudentID],
-                            [Students].[FirstName],
-                            [Students].[LastName],
-                            [Students].[MiddleName]
+                            [Team].[ID] as [TeamID],
+                            [Team].[Number] as [TeamNumber],
+                            [Student].[ID] as [StudentID],
+                            [Student].[FirstName],
+                            [Student].[LastName],
+                            [Student].[MiddleName]
                         FROM 
-                            [Teams] 
-                                LEFT JOIN [Students] 
-                                    ON [Teams].[ID] = [Students].[TeamID]";
+                            [Team] 
+                                LEFT JOIN [Student] 
+                                    ON [Team].[ID] = [Student].[TeamID]";
 
             var teams = new List<Team>();
             using (var connection = new SqliteConnection(databaseConnectionString))
@@ -79,30 +79,30 @@ namespace VKM.Admin.Services
 
         public void SaveTeam(int number)
         {
-            var sql = $"INSERT INTO [Teams] VALUES ({number})";
+            var sql = $"INSERT INTO [Team] VALUES ({number})";
             ExecuteNonQueryInternal(sql);
         }
 
         public void UpdateTeam(Team team)
         {
-            var sql = $"UPDATE [Teams] SET [Number] = {team.Number} WHERE [ID] = {team.Id}";
+            var sql = $"UPDATE [Team] SET [Number] = {team.Number} WHERE [ID] = {team.Id}";
             ExecuteNonQueryInternal(sql);
         }
 
         public Student LoadStudentById(int studentId)
         {
-            var sql = $@"SELECT [Students].[ID] as [StudentID],
-                                [Students].[FirstName],
-                                [Students].[LastName],
-                                [Students].[MiddleName],
-                                [Students].[UniversityGroup],
-                                [Students].[AverageScore],
-                                [Teams].[ID] as [TeamID],
-                                [Teams].[Number] as [TeamNumber]
-                            FROM [Students] 
-                            INNER JOIN [Teams] 
-                                ON [Students].[TeamID] = [Teams].[ID] 
-                            WHERE [Students].[ID] = {studentId}";
+            var sql = $@"SELECT [Student].[ID] as [StudentID],
+                                [Student].[FirstName],
+                                [Student].[LastName],
+                                [Student].[MiddleName],
+                                [Student].[UniversityGroup],
+                                [Student].[AverageScore],
+                                [Team].[ID] as [TeamID],
+                                [Team].[Number] as [TeamNumber]
+                            FROM [Student] 
+                            INNER JOIN [Team] 
+                                ON [Student].[TeamID] = [Team].[ID] 
+                            WHERE [Student].[ID] = {studentId}";
 
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
@@ -138,14 +138,14 @@ namespace VKM.Admin.Services
         public void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId,
             double averageValue)
         {
-            var sql = $"INSERT INTO [Students] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
+            var sql = $"INSERT INTO [Student] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
 
             ExecuteNonQueryInternal(sql);
         }
 
         public void UpdateStudent(Student student)
         {
-            var sql = $@"UPDATE [Students] SET  [FirstName] = '{student.FirstName}', 
+            var sql = $@"UPDATE [Student] SET  [FirstName] = '{student.FirstName}', 
                                                 [LastName] = '{student.LastName}', 
                                                 [MiddleName] = '{student.MiddleName}', 
                                                 [UniversityGroup] = '{student.Group}', 
@@ -157,11 +157,11 @@ namespace VKM.Admin.Services
 
         public IEnumerable<HistoryItem> LoadHistoryByStudentId(int studentId)
         {
-            var sql = $@"SELECT [Histories].[Algorithm],
-                                [Histories].[Date],
-                                [Histories].[Value]
-                            FROM [Histories]
-                            WHERE [Histories].[StudentID] = {studentId}";
+            var sql = $@"SELECT [History].[Algorithm],
+                                [History].[Date],
+                                [History].[Value]
+                            FROM [History]
+                            WHERE [History].[StudentID] = {studentId}";
 
             var history = new List<HistoryItem>();
             using (var connection = new SqliteConnection(databaseConnectionString))
@@ -190,17 +190,17 @@ namespace VKM.Admin.Services
 
         public void RemoveStudentById(int id)
         {
-            var sql = $@"DELETE FROM [Students] WHERE [ID] = {id}";
+            var sql = $@"DELETE FROM [Student] WHERE [ID] = {id}";
             ExecuteNonQueryInternal(sql);
         }
 
         public IEnumerable<Team> LoadTeams()
         {
             var sql = @"SELECT 
-                            [Teams].[ID] as [TeamID],
-                            [Teams].[Number] as [TeamNumber]
+                            [Team].[ID] as [TeamID],
+                            [Team].[Number] as [TeamNumber]
                         FROM 
-                            [Teams]";
+                            [Team]";
 
             var teams = new List<Team>();
             using (var connection = new SqliteConnection(databaseConnectionString))
@@ -229,7 +229,7 @@ namespace VKM.Admin.Services
 
         public Team LoadTeam(int id)
         {
-            var sql = $"SELECT [Teams].[Number] as [TeamNumber] FROM [Teams] WHERE [Teams].[ID] = {id}";
+            var sql = $"SELECT [Team].[Number] as [TeamNumber] FROM [Team] WHERE [Team].[ID] = {id}";
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
                 connection.Open();
@@ -253,13 +253,13 @@ namespace VKM.Admin.Services
 
         public void RemoveTeamById(int id)
         {
-            var sql = $"DELETE FROM [Students] WHERE [TeamID] = {id}; DELETE FROM [Teams] WHERE [ID] = {id}";
+            var sql = $"DELETE FROM [Student] WHERE [TeamID] = {id}; DELETE FROM [Team] WHERE [ID] = {id}";
             ExecuteNonQueryInternal(sql);
         }
 
         public int CreateTeam(Team team)
         {
-            var sql = $"INSERT INTO [Teams] (Number) VALUES ({team.Number}); SELECT [ID] FROM [Teams] WHERE [ID] = (SELECT MAX(ID) FROM [Teams])";
+            var sql = $"INSERT INTO [Team] (Number) VALUES ({team.Number}); SELECT [ID] FROM [Team] WHERE [ID] = (SELECT MAX(ID) FROM [Team])";
             
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
@@ -280,9 +280,9 @@ namespace VKM.Admin.Services
 
         public int CreateStudent(Student student)
         {
-            var sql = $@"INSERT INTO [Students] (FirstName, LastName, MiddleName, UniversityGroup, TeamID) 
+            var sql = $@"INSERT INTO [Student] (FirstName, LastName, MiddleName, UniversityGroup, TeamID) 
                                 VALUES ('{student.FirstName}', '{student.LastName}', '{student.MiddleName}', '{student.Group}', {student.Team.Id}); 
-                         SELECT [ID] FROM [Students] WHERE [ID] = (SELECT MAX(ID) FROM [Students])";
+                         SELECT [ID] FROM [Student] WHERE [ID] = (SELECT MAX(ID) FROM [Student])";
             
             using (var connection = new SqliteConnection(databaseConnectionString))
             {
