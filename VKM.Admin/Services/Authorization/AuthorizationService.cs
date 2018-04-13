@@ -1,6 +1,6 @@
 ﻿using VKM.Admin.Services.Interfaces;
 
-namespace VKM.Admin.Services
+namespace VKM.Admin.Services.Authorization
 {
     public class AuthorizationService : IAuthorizationService
     {

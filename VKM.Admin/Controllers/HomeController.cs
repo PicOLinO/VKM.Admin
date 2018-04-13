@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
 using VKM.Admin.Models.Database;
 using VKM.Admin.Services;
+using VKM.Admin.Services.Authorization;
 using VKM.Admin.Services.Interfaces;
 
 namespace VKM.Admin.Controllers

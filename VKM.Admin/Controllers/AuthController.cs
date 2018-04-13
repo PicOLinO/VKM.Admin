@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VKM.Admin.Services;
+using VKM.Admin.Services.Authorization;
 using VKM.Admin.Services.Interfaces;
 
 namespace VKM.Admin.Controllers
 {
+    [Authorize]
     [Route("api/v1/auth")]
     public class AuthController : Controller
     {
