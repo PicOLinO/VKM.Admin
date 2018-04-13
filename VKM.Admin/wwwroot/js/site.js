@@ -253,12 +253,12 @@ function onStudentLoadedFromJsTreeChanged(view) {
 }
 
 function resetModalDialogsFields() {
-    $("#m_LastName").empty();
-    $("#m_FirstName").empty();
-    $("#m_MiddleName").empty();
-    $("#m_Group").empty();
-    $("#m_Team").empty();
-    $("#m_TeamNumber").empty();
+    $("#m_LastName").val('');
+    $("#m_FirstName").val('');
+    $("#m_MiddleName").val('');
+    $("#m_Group").val('');
+    $("#m_Team").val('');
+    $("#m_TeamNumber").val('');
 }
 
 function loadTeamsInStudentModalDialog(view) {
