@@ -296,5 +296,11 @@ namespace VKM.Admin.Services
             }
             return -1;
         }
+
+        public void AddHistoryItem(HistoryItem historyItem, int studentId)
+        {
+            var sql = $"INSERT INTO [History] (StudentID, Value, Date, Algorithm) VALUES ({studentId}, {historyItem.Value}, '{historyItem.Date}', '{historyItem.AlgorithmName}')";
+            ExecuteNonQueryInternal(sql);
+        }
     }
 }

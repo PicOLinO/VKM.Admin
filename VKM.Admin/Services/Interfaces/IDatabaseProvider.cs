@@ -18,5 +18,6 @@ namespace VKM.Admin.Services.Interfaces
         void RemoveTeamById(int id);
         int CreateTeam(Team team);
         int CreateStudent(Student student);
+        void AddHistoryItem(HistoryItem historyItem, int studentId);
     }
 }

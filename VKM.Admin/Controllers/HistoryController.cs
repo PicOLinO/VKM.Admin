@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
+using VKM.Admin.Models.Database;
 using VKM.Admin.Services;
 using VKM.Admin.Services.Interfaces;
 
@@ -20,10 +21,12 @@ namespace VKM.Admin.Controllers
         }
         
         [HttpPost]
-        [Route("insert")]
-        public IActionResult AddHistoryItem()
+        [Route("")]
+        public IActionResult AddHistoryItem(HistoryItem historItem, int studentId)
         {
-            throw new NotImplementedException();
+            databaseProvider.AddHistoryItem(historItem, studentId);
+
+            return Ok();
         }
     }
 }
