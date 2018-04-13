@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
 using VKM.Admin.Models.Database;
@@ -14,13 +15,11 @@ namespace VKM.Admin.Controllers
     {
         private readonly Config config;
         private readonly IDatabaseProvider databaseProvider;
-        private readonly IAuthorizationService authorizationService;
         
-        public HomeController(IOptions<Config> config)
+        public HomeController(IConfiguration configuration, IOptions<Config> config)
         {
             this.config = config.Value;
             databaseProvider = new SqLiteDatabaseProvider(this.config.DatabaseConnectionString);
-            authorizationService = new AuthorizationService();
         }
         
         [HttpGet]

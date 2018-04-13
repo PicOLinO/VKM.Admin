@@ -2,7 +2,7 @@
 {
     public interface IAuthorizationDatabaseProvider
     {
-        string Authorize(string userName, string password);
-        void Register(string userName, string password, string confirmPassword);
+        bool Authorize(string userName, string password);
+        void Register(string userName, string password, int studentId);
     }
 }
