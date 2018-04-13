@@ -9,14 +9,10 @@ using VKM.Admin.Services.Interfaces;
 
 namespace VKM.Admin.Services
 {
-    public class SqLiteDatabaseProvider : IDatabaseProvider
+    public class SqLiteDatabaseProvider : SqLiteDatabaseProviderBase, IDatabaseProvider
     {
-        private readonly string databaseConnectionString;
-
-        public SqLiteDatabaseProvider(string databaseConnectionString)
+        public SqLiteDatabaseProvider(string databaseConnectionString) : base(databaseConnectionString)
         {
-            var rootPath = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
-            this.databaseConnectionString = databaseConnectionString.Replace("|DataDirectory|", rootPath);
         }
 
         public IEnumerable<Team> LoadTeamsAndStudents()
@@ -34,7 +30,7 @@ namespace VKM.Admin.Services
                                     ON [Team].[ID] = [Student].[TeamID]";
 
             var teams = new List<Team>();
-            using (var connection = new SqliteConnection(databaseConnectionString))
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
@@ -104,7 +100,7 @@ namespace VKM.Admin.Services
                                 ON [Student].[TeamID] = [Team].[ID] 
                             WHERE [Student].[ID] = {studentId}";
 
-            using (var connection = new SqliteConnection(databaseConnectionString))
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
@@ -164,7 +160,7 @@ namespace VKM.Admin.Services
                             WHERE [History].[StudentID] = {studentId}";
 
             var history = new List<HistoryItem>();
-            using (var connection = new SqliteConnection(databaseConnectionString))
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
@@ -203,7 +199,7 @@ namespace VKM.Admin.Services
                             [Team]";
 
             var teams = new List<Team>();
-            using (var connection = new SqliteConnection(databaseConnectionString))
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
@@ -230,7 +226,7 @@ namespace VKM.Admin.Services
         public Team LoadTeam(int id)
         {
             var sql = $"SELECT [Team].[Number] as [TeamNumber] FROM [Team] WHERE [Team].[ID] = {id}";
-            using (var connection = new SqliteConnection(databaseConnectionString))
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
@@ -261,7 +257,7 @@ namespace VKM.Admin.Services
         {
             var sql = $"INSERT INTO [Team] (Number) VALUES ({team.Number}); SELECT [ID] FROM [Team] WHERE [ID] = (SELECT MAX(ID) FROM [Team])";
             
-            using (var connection = new SqliteConnection(databaseConnectionString))
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
@@ -284,7 +280,7 @@ namespace VKM.Admin.Services
                                 VALUES ('{student.FirstName}', '{student.LastName}', '{student.MiddleName}', '{student.Group}', {student.Team.Id}); 
                          SELECT [ID] FROM [Student] WHERE [ID] = (SELECT MAX(ID) FROM [Student])";
             
-            using (var connection = new SqliteConnection(databaseConnectionString))
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
                 using (var cmd = new SqliteCommand(sql, connection))
@@ -299,18 +295,6 @@ namespace VKM.Admin.Services
                 }
             }
             return -1;
-        }
-
-        private int ExecuteNonQueryInternal(string sql)
-        {
-            using (var connection = new SqliteConnection(databaseConnectionString))
-            {
-                connection.Open();
-                using (var cmd = new SqliteCommand(sql, connection))
-                {
-                    return cmd.ExecuteNonQuery();
-                }
-            }
         }
     }
 }

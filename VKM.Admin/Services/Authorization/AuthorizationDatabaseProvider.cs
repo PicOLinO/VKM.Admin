@@ -2,10 +2,8 @@
 
 namespace VKM.Admin.Services.Authorization
 {
-    public class AuthorizationService : IAuthorizationService
+    public class AuthorizationDatabaseProvider : IAuthorizationDatabaseProvider
     {
-        private readonly IAuthorizationDatabaseProvider databaseProvider;
-        
         public string Authorize(string userName, string password)
         {
             throw new System.NotImplementedException();
