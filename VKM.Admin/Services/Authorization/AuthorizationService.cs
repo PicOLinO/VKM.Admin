@@ -15,11 +15,13 @@ namespace VKM.Admin.Services.Authorization
         private readonly string audience;
         private readonly string signingKey;
         
-        public AuthorizationService(string issuer, string audience, string signingKey)
+        public AuthorizationService(string databaseConnectionString, string issuer, string audience, string signingKey)
         {
             this.issuer = issuer;
             this.audience = audience;
             this.signingKey = signingKey;
+            
+            databaseProvider = new AuthorizationDatabaseProvider(databaseConnectionString);
         }
         
         public string Authorize(string userName, string password)

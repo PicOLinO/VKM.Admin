@@ -13,7 +13,7 @@ namespace VKM.Admin.Services.Authorization
         
         public bool Authorize(string userName, string password)
         {
-            var sql = $"SELECT [Login], [PasswordHash] FROM [User] WHERE [Login] = {userName}";
+            var sql = $"SELECT [Login], [PasswordHash] FROM [User] WHERE [Login] = '{userName}'";
 
             using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
@@ -30,7 +30,8 @@ namespace VKM.Admin.Services.Authorization
                                 Password = reader["PasswordHash"].ToString()
                             };
 
-                            if (string.IsNullOrEmpty(user.Login) && PasswordHasher.IsEqual(user.Password, password))
+                            var isPasswordsEquals = PasswordHasher.IsEqual(user.Password, password);
+                            if (!string.IsNullOrEmpty(user.Login) && isPasswordsEquals)
                             {
                                 return true;
                             }

@@ -24,6 +24,12 @@ namespace VKM.Admin
         {
             var config = Configuration.GetSection("Config");
             services.Configure<Config>(config);
+
+            //TODO: Поменять на норм значения, вынести в конфиг и поменять при релизе
+            Configuration["Issuer"] = "DanilaChe";
+            Configuration["Audience"] = "VkMirea";
+            Configuration["SigningKey"] = "asudh9q7wdyqhdjqu9djqwd7qw9dequdqwdjask";
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(jwtBearerOptions =>
             {
