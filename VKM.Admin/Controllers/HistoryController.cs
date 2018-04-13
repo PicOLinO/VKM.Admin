@@ -7,6 +7,7 @@ using VKM.Admin.Services.Interfaces;
 
 namespace VKM.Admin.Controllers
 {
+    [Route("api/v1/history")]
     public class HistoryController : Controller
     {
         private readonly Config config;
@@ -19,7 +20,7 @@ namespace VKM.Admin.Controllers
         }
         
         [HttpPost]
-        [Route("api/v1/history")]
+        [Route("insert")]
         public IActionResult AddHistoryItem()
         {
             throw new NotImplementedException();
