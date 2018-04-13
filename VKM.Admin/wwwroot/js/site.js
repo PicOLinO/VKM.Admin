@@ -55,13 +55,13 @@ function treeContextMenu(node) {
             action: function (data) {
                 var parameter = {id: jstreeSelectedItem.id};
                 if (jstreeSelectedItem.type === "student") {
-                    $.getJSON("/Home/Student", parameter, onStudentEditClicked);
+                    $.getJSON("api/v1/student", parameter, onStudentEditClicked);
                     $("#m_SaveStudentButton").show();
                     $("#m_AddStudentButton").hide();
                     $('#EditStudentDialog').modal('show');
                 }
                 if (jstreeSelectedItem.type === "team") {
-                    $.getJSON("Home/Team", parameter, onTeamEditClicked);
+                    $.getJSON("api/v1/team", parameter, onTeamEditClicked);
                     $("#m_SaveTeamButton").show();
                     $("#m_AddTeamButton").hide();
                     $('#EditTeamDialog').modal('show');
@@ -74,7 +74,8 @@ function treeContextMenu(node) {
                 if (jstreeSelectedItem.type === "team") {
                     if (confirm("Удалить взвод? Будут удалены все студенты этого взвода...")) {
                         $.ajax({
-                            url: "Home/RemoveTeam",
+                            url: "api/v1/team",
+                            type: "DELETE",
                             data: {id: node.data.jstree.id},
                             success: function () {
                                 location.reload();
@@ -93,7 +94,8 @@ function treeContextMenu(node) {
                 if (jstreeSelectedItem.type === "student") {
                     if (confirm("Удалить студента?")) {
                         $.ajax({
-                            url: "Home/RemoveStudent",
+                            url: "api/v1/student",
+                            type: "DELETE",
                             data: {id: node.data.jstree.id},
                             success: function () {
                                 var nodeId = $("#BaseTree").jstree().get_selected()[0];
@@ -128,7 +130,7 @@ $("#BaseTree")
         jstreeSelectedItem = {id: data.node.data.jstree.id, type: data.node.data.jstree.type};
         if (jstreeSelectedItem.type === "student") {
             var parameter = {id: jstreeSelectedItem.id};
-            $.getJSON("/Home/Student", parameter, onStudentLoadedFromJsTreeChanged);
+            $.getJSON("api/v1/student", parameter, onStudentLoadedFromJsTreeChanged);
         }
         if (jstreeSelectedItem.type === "team") {
             $("#StudentContent").hide();
@@ -136,13 +138,13 @@ $("#BaseTree")
     });
 
 $('#m_SaveStudentButton').click(function () {
-    addOrUpdateStudent("UpdateStudent");
+    addOrUpdateStudent("PUT");
 });
 $('#m_AddStudentButton').click(function () {
-    addOrUpdateStudent("CreateStudent");
+    addOrUpdateStudent("POST");
 });
 
-function addOrUpdateStudent(controller) {
+function addOrUpdateStudent(type) {
     var student = {
         id: jstreeSelectedItem.id,
         firstName: $('#m_FirstName').val(),
@@ -152,8 +154,8 @@ function addOrUpdateStudent(controller) {
         team: {id: $('#m_Team').val()}
     };
     $.ajax({
-        url: "Home/" + controller,
-        type: "POST",
+        url: "api/v1/student",
+        type: type,
         contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
         success: function () {
             location.reload();
@@ -171,20 +173,20 @@ function addOrUpdateStudent(controller) {
 }
 
 $('#m_SaveTeamButton').click(function () {
-    addOrUpdateTeam("UpdateTeam");
+    addOrUpdateTeam("PUT");
 });
 $('#m_AddTeamButton').click(function () {
-    addOrUpdateTeam("CreateTeam");
+    addOrUpdateTeam("POST");
 });
 
-function addOrUpdateTeam(controller) {
+function addOrUpdateTeam(type) {
     var team = {
         id: jstreeSelectedItem.id,
         number: $('#m_TeamNumber').val()
     };
     $.ajax({
-        url: "Home/" + controller,
-        type: "POST",
+        url: "api/v1/team",
+        type: type,
         contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
         success: function () {
             location.reload();
@@ -260,7 +262,7 @@ function resetModalDialogsFields() {
 }
 
 function loadTeamsInStudentModalDialog(view) {
-    $.getJSON("/Home/Teams", function (data) {
+    $.getJSON("api/v1/teams", function (data) {
         onTeamsLoaded(data);
         if (jstreeSelectedItem.type === "student") {
             $("#m_Team").val(view.student.team.id);

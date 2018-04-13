@@ -32,6 +32,8 @@ namespace VKM.Admin.Controllers
 
         #region Student
 
+        [HttpGet]
+        [Route("api/v1/student")]
         public IActionResult Student(int id)
         {
             var student = databaseProvider.LoadStudentById(id);
@@ -42,6 +44,8 @@ namespace VKM.Admin.Controllers
             return Json(json);
         }
 
+        [HttpPost]
+        [Route("api/v1/student")]
         public IActionResult CreateStudent(Student student)
         {
             var id = databaseProvider.CreateStudent(student);
@@ -49,6 +53,8 @@ namespace VKM.Admin.Controllers
             return Ok(id);
         }
         
+        [HttpPut]
+        [Route("api/v1/student")]
         public IActionResult UpdateStudent(Student student)
         {
             databaseProvider.UpdateStudent(student);
@@ -56,6 +62,8 @@ namespace VKM.Admin.Controllers
             return Ok();
         }
         
+        [HttpDelete]
+        [Route("api/v1/student")]
         public IActionResult RemoveStudent(int id)
         {
             databaseProvider.RemoveStudentById(id);
@@ -67,6 +75,8 @@ namespace VKM.Admin.Controllers
 
         #region Team
 
+        [HttpGet]
+        [Route("api/v1/team")]
         public IActionResult Team(int id)
         {
             var team = databaseProvider.LoadTeam(id);
@@ -74,6 +84,8 @@ namespace VKM.Admin.Controllers
             return Json(team);
         }
 
+        [HttpGet]
+        [Route("api/v1/teams")]
         public IActionResult Teams()
         {
             var teams = databaseProvider.LoadTeams();
@@ -81,6 +93,8 @@ namespace VKM.Admin.Controllers
             return Json(teams);
         }
 
+        [HttpPost]
+        [Route("api/v1/team")]
         public IActionResult CreateTeam(Team team)
         {
             var id = databaseProvider.CreateTeam(team);
@@ -88,6 +102,8 @@ namespace VKM.Admin.Controllers
             return Ok(id);
         }
         
+        [HttpPut]
+        [Route("api/v1/team")]
         public IActionResult UpdateTeam(Team team)
         {
             databaseProvider.UpdateTeam(team);
@@ -95,6 +111,8 @@ namespace VKM.Admin.Controllers
             return Ok();
         }
 
+        [HttpDelete]
+        [Route("api/v1/team")]
         public IActionResult RemoveTeam(int id)
         {
             databaseProvider.RemoveTeamById(id);
@@ -104,8 +122,7 @@ namespace VKM.Admin.Controllers
 
         #endregion
         
-        
-
+        [Route("api/v1/error")]
         public IActionResult Error()
         {
             return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
