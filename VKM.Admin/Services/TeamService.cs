@@ -11,6 +11,12 @@ namespace VKM.Admin.Services
         {
         }
 
+        public IEnumerable<Team> GetAllTeamsWithStudents()
+        {
+            var teamsWithStudents = DatabaseProvider.LoadTeamsAndStudents();
+            return teamsWithStudents;
+        }
+        
         public IEnumerable<Team> GetAllTeams()
         {
             var teams = DatabaseProvider.LoadTeams();

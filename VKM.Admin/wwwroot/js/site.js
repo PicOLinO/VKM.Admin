@@ -146,17 +146,17 @@ $('#m_AddStudentButton').click(function () {
 
 function addOrUpdateStudent(type) {
     var student = {
-        id: jstreeSelectedItem.id,
-        firstName: $('#m_FirstName').val(),
-        lastName: $('#m_LastName').val(),
-        middleName: $('#m_MiddleName').val(),
-        group: $('#m_Group').val(),
-        team: {id: $('#m_Team').val()}
+        Id: jstreeSelectedItem.id,
+        FirstName: $('#m_FirstName').val(),
+        LastName: $('#m_LastName').val(),
+        MiddleName: $('#m_MiddleName').val(),
+        Group: $('#m_Group').val(),
+        TeamId: $('#m_Team').val()
     };
     $.ajax({
         url: "api/v1/student",
         type: type,
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
+        contentType: "application/json; charset=UTF-8",
         success: function () {
             location.reload();
         },
@@ -168,7 +168,7 @@ function addOrUpdateStudent(type) {
         error: function (req, status, error) {
             alert(error);
         },
-        data: student
+        data: JSON.stringify(student)
     })
 }
 
@@ -187,7 +187,7 @@ function addOrUpdateTeam(type) {
     $.ajax({
         url: "api/v1/team",
         type: type,
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8", //TODO: To JSON!
+        contentType: "application/json; charset=UTF-8",
         success: function () {
             location.reload();
         },
@@ -199,7 +199,7 @@ function addOrUpdateTeam(type) {
         error: function (req, status, error) {
             alert(error);
         },
-        data: team
+        data: JSON.stringify(team)
     })
 }
 

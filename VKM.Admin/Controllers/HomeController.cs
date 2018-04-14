@@ -33,11 +33,10 @@ namespace VKM.Admin.Controllers
         public IActionResult Index()
         {
             //TODO: Нужно это переделать на что нибудь другое... Подумать...
-            //TODO: Также нужно добавить всем [FromBody] и настроить на JSON.
             //TODO: Также использовать Domain и Dto объекты, а не просто Domain.
-            var teams = databaseProvider.LoadTeamsAndStudents();
+            var teamsAndStudents = teamService.GetAllTeamsWithStudents();
             
-            return View(teams);
+            return View(teamsAndStudents);
         }
 
         #region Student
@@ -56,7 +55,7 @@ namespace VKM.Admin.Controllers
 
         [HttpPost]
         [Route("api/v1/student")]
-        public IActionResult CreateStudent(StudentCreateViewModel vm)
+        public IActionResult CreateStudent([FromBody]StudentCreateViewModel vm)
         {
             var id = studentService.CreateStudent(vm);
 
@@ -65,7 +64,7 @@ namespace VKM.Admin.Controllers
         
         [HttpPut]
         [Route("api/v1/student")]
-        public IActionResult UpdateStudent(StudentUpdateViewModel vm)
+        public IActionResult UpdateStudent([FromBody]StudentUpdateViewModel vm)
         {
             studentService.UpdateStudent(vm);
 
