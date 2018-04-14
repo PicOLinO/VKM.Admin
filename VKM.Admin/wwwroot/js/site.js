@@ -1,6 +1,8 @@
 ﻿var jstreeSelectedItem = {id: -1, type: undefined};
 
-$(function () {
+$(refillJsTree());
+
+function createJsTree() {
     $("#BaseTree").jstree(
         {
             "core": {
@@ -21,14 +23,14 @@ $(function () {
             //    return node.type !== "team";
             //},
             "contextmenu": {
-                items: treeContextMenu
+                items: treeContextMenuSetup
             },
             "plugins": ["conditionalselect", "sort", "wholerow", "unique", "types", "contextmenu"]
         }
     );
-});
+}
 
-function treeContextMenu(node) {
+function treeContextMenuSetup(node) {
 
     var items = {
         addStudent: {
@@ -259,6 +261,22 @@ function resetModalDialogsFields() {
     $("#m_Group").val('');
     $("#m_Team").val('');
     $("#m_TeamNumber").val('');
+}
+
+function refillJsTree() {
+    $.getJSON("api/v1/setup", function (data) {
+        var html = "<ul>";
+        $.each(data, function (index, value) {
+            html = html + "<li data-jstree='{\"type\":\"team\",\"id\":\"" + value.id + "\"}'>" + value.number + " взвод<ul>";
+            $.each(data[0].students, function (index, value) {
+                html = html + "<li data-jstree='{\"type\":\"student\",\"id\":\"" + value.id + "\"}'>" + value.fullName + "</li>";
+            });
+            html = html + "</ul></li>";
+        });
+        html = html + "</ul>";
+        $('#BaseTree').append(html);
+        createJsTree();
+    })
 }
 
 function loadTeamsInStudentModalDialog(view) {

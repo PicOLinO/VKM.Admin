@@ -9,19 +9,6 @@
         <div class="col">
             <div>
                 <div id="BaseTree">
-                    <ul>
-                        @foreach (var team in Model)
-                        {
-                            <li data-jstree='{ "type" : "team", "id": @team.Id }'>@team.Number взвод
-                                <ul>
-                                    @foreach (var student in team.Students)
-                                    {
-                                        <li data-jstree='{ "type" : "student", "id": @student.Id }'>@student.FullName</li>
-                                    }
-                                </ul>
-                            </li>
-                        }
-                    </ul>
                 </div>
             </div>
         </div>

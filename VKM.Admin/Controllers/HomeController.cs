@@ -32,11 +32,16 @@ namespace VKM.Admin.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            //TODO: Нужно это переделать на что нибудь другое... Подумать...
-            //TODO: Также использовать Domain и Dto объекты, а не просто Domain.
+            return View();
+        }
+
+        [HttpGet]
+        [Route("api/v1/setup")]
+        public IActionResult TeamsWithStudents()
+        {
             var teamsAndStudents = teamService.GetAllTeamsWithStudents();
-            
-            return View(teamsAndStudents);
+
+            return Json(teamsAndStudents);
         }
 
         #region Student
