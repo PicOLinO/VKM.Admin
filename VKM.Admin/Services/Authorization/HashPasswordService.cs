@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace VKM.Admin.Services.Authorization
 {
-    public static class PasswordHasher
+    public static class HashPasswordService
     {
         public static string Hash(string password)
         {

@@ -1,4 +1,4 @@
-﻿namespace VKM.Admin.Services.Interfaces
+﻿namespace VKM.Admin.Providers
 {
     public interface IAuthorizationDatabaseProvider
     {

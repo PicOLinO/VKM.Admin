@@ -5,26 +5,36 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
 using VKM.Admin.Models.Database;
+using VKM.Admin.Models.ViewModel.Student;
+using VKM.Admin.Models.ViewModel.Team;
+using VKM.Admin.Providers;
 using VKM.Admin.Services;
-using VKM.Admin.Services.Authorization;
-using VKM.Admin.Services.Interfaces;
 
 namespace VKM.Admin.Controllers
 {
     public class HomeController : Controller
     {
         private readonly Config config;
-        private readonly IDatabaseProvider databaseProvider;
+        private readonly StudentService studentService;
+        private readonly TeamService teamService;
+        private readonly HistoryService historyService;
         
         public HomeController(IConfiguration configuration, IOptions<Config> config)
         {
             this.config = config.Value;
-            databaseProvider = new SqLiteDatabaseProvider(this.config.DatabaseConnectionString);
+            
+            var databaseProvider = new SqLiteDatabaseProvider(this.config.DatabaseConnectionString);
+            studentService = new StudentService(databaseProvider);
+            teamService = new TeamService(databaseProvider);
+            historyService = new HistoryService(databaseProvider);
         }
         
         [HttpGet]
         public IActionResult Index()
         {
+            //TODO: Нужно это переделать на что нибудь другое... Подумать...
+            //TODO: Также нужно добавить всем [FromBody] и настроить на JSON.
+            //TODO: Также использовать Domain и Dto объекты, а не просто Domain.
             var teams = databaseProvider.LoadTeamsAndStudents();
             
             return View(teams);
@@ -36,8 +46,8 @@ namespace VKM.Admin.Controllers
         [Route("api/v1/student")]
         public IActionResult Student(int id)
         {
-            var student = databaseProvider.LoadStudentById(id);
-            var studentHistory = databaseProvider.LoadHistoryByStudentId(id);
+            var student = studentService.GetStudentById(id);
+            var studentHistory = historyService.LoadStudentHistory(id);
 
             var json = new {Student = student, History = studentHistory};
 
@@ -46,18 +56,18 @@ namespace VKM.Admin.Controllers
 
         [HttpPost]
         [Route("api/v1/student")]
-        public IActionResult CreateStudent(Student student)
+        public IActionResult CreateStudent(StudentCreateViewModel vm)
         {
-            var id = databaseProvider.CreateStudent(student);
+            var id = studentService.CreateStudent(vm);
 
             return Ok(id);
         }
         
         [HttpPut]
         [Route("api/v1/student")]
-        public IActionResult UpdateStudent(Student student)
+        public IActionResult UpdateStudent(StudentUpdateViewModel vm)
         {
-            databaseProvider.UpdateStudent(student);
+            studentService.UpdateStudent(vm);
 
             return Ok();
         }
@@ -66,8 +76,8 @@ namespace VKM.Admin.Controllers
         [Route("api/v1/student")]
         public IActionResult RemoveStudent(int id)
         {
-            databaseProvider.RemoveStudentById(id);
-
+            studentService.DeleteStudentById(id);
+            
             return Ok();
         }
 
@@ -79,7 +89,7 @@ namespace VKM.Admin.Controllers
         [Route("api/v1/team")]
         public IActionResult Team(int id)
         {
-            var team = databaseProvider.LoadTeam(id);
+            var team = teamService.GetTeamById(id);
 
             return Json(team);
         }
@@ -88,25 +98,25 @@ namespace VKM.Admin.Controllers
         [Route("api/v1/teams")]
         public IActionResult Teams()
         {
-            var teams = databaseProvider.LoadTeams();
+            var teams = teamService.GetAllTeams();
             
             return Json(teams);
         }
 
         [HttpPost]
         [Route("api/v1/team")]
-        public IActionResult CreateTeam(Team team)
+        public IActionResult CreateTeam([FromBody]TeamCreateViewModel vm)
         {
-            var id = databaseProvider.CreateTeam(team);
+            var id = teamService.CreateTeam(vm);
 
             return Ok(id);
         }
         
         [HttpPut]
         [Route("api/v1/team")]
-        public IActionResult UpdateTeam(Team team)
+        public IActionResult UpdateTeam([FromBody]TeamUpdateViewModel vm)
         {
-            databaseProvider.UpdateTeam(team);
+            teamService.UpdateTeam(vm);
 
             return Ok();
         }
@@ -115,7 +125,7 @@ namespace VKM.Admin.Controllers
         [Route("api/v1/team")]
         public IActionResult RemoveTeam(int id)
         {
-            databaseProvider.RemoveTeamById(id);
+            teamService.DeleteTeamById(id);
 
             return Ok();
         }

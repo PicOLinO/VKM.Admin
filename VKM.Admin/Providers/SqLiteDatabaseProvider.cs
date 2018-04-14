@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.Data.Sqlite;
-using VKM.Admin.Models;
 using VKM.Admin.Models.Database;
-using VKM.Admin.Services.Interfaces;
 
-namespace VKM.Admin.Services
+namespace VKM.Admin.Providers
 {
     public class SqLiteDatabaseProvider : SqLiteDatabaseProviderBase, IDatabaseProvider
     {
@@ -73,15 +70,9 @@ namespace VKM.Admin.Services
             return teams;
         }
 
-        public void SaveTeam(int number)
+        public void UpdateTeam(int teamId, int teamNumber)
         {
-            var sql = $"INSERT INTO [Team] VALUES ({number})";
-            ExecuteNonQueryInternal(sql);
-        }
-
-        public void UpdateTeam(Team team)
-        {
-            var sql = $"UPDATE [Team] SET [Number] = {team.Number} WHERE [ID] = {team.Id}";
+            var sql = $"UPDATE [Team] SET [Number] = {teamNumber} WHERE [ID] = {teamId}";
             ExecuteNonQueryInternal(sql);
         }
 
@@ -131,22 +122,14 @@ namespace VKM.Admin.Services
             return null;
         }
 
-        public void SaveStudent(string firstName, string lastName, string middleName, string group, int teamId,
-            double averageValue)
+        public void UpdateStudent(int studentId, string firstName, string lastName, string middleName, string group, int teamId)
         {
-            var sql = $"INSERT INTO [Student] VALUES ({firstName}, {lastName}, {middleName}, {group}, {teamId}, {averageValue})";
-
-            ExecuteNonQueryInternal(sql);
-        }
-
-        public void UpdateStudent(Student student)
-        {
-            var sql = $@"UPDATE [Student] SET  [FirstName] = '{student.FirstName}', 
-                                                [LastName] = '{student.LastName}', 
-                                                [MiddleName] = '{student.MiddleName}', 
-                                                [UniversityGroup] = '{student.Group}', 
-                                                [TeamID] = {student.Team.Id}
-                         WHERE [ID] = {student.Id}";
+            var sql = $@"UPDATE [Student] SET  [FirstName] = '{firstName}', 
+                                                [LastName] = '{lastName}', 
+                                                [MiddleName] = '{middleName}', 
+                                                [UniversityGroup] = '{group}', 
+                                                [TeamID] = {teamId}
+                         WHERE [ID] = {studentId}";
 
             ExecuteNonQueryInternal(sql);
         }
@@ -253,9 +236,9 @@ namespace VKM.Admin.Services
             ExecuteNonQueryInternal(sql);
         }
 
-        public int CreateTeam(Team team)
+        public int CreateTeam(int teamNumber)
         {
-            var sql = $"INSERT INTO [Team] (Number) VALUES ({team.Number}); SELECT [ID] FROM [Team] WHERE [ID] = (SELECT MAX(ID) FROM [Team])";
+            var sql = $"INSERT INTO [Team] (Number) VALUES ({teamNumber}); SELECT [ID] FROM [Team] WHERE [ID] = (SELECT MAX(ID) FROM [Team])";
             
             using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
@@ -274,10 +257,10 @@ namespace VKM.Admin.Services
             return -1;
         }
 
-        public int CreateStudent(Student student)
+        public int CreateStudent(string firstName, string lastName, string middleName, string group, int teamId)
         {
             var sql = $@"INSERT INTO [Student] (FirstName, LastName, MiddleName, UniversityGroup, TeamID) 
-                                VALUES ('{student.FirstName}', '{student.LastName}', '{student.MiddleName}', '{student.Group}', {student.Team.Id}); 
+                                VALUES ('{firstName}', '{lastName}', '{middleName}', '{group}', {teamId}); 
                          SELECT [ID] FROM [Student] WHERE [ID] = (SELECT MAX(ID) FROM [Student])";
             
             using (var connection = new SqliteConnection(DatabaseConnectionString))
@@ -297,9 +280,9 @@ namespace VKM.Admin.Services
             return -1;
         }
 
-        public void AddHistoryItem(HistoryItem historyItem, int studentId)
+        public void AddHistoryItem(string algorithmName, DateTime date, int value, int studentId)
         {
-            var sql = $"INSERT INTO [History] (StudentID, Value, Date, Algorithm) VALUES ({studentId}, {historyItem.Value}, '{historyItem.Date}', '{historyItem.AlgorithmName}')";
+            var sql = $"INSERT INTO [History] (StudentID, Value, Date, Algorithm) VALUES ({studentId}, {value}, '{date}', '{algorithmName}')";
             ExecuteNonQueryInternal(sql);
         }
     }

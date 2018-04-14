@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
-using VKM.Admin.Models.Database;
+using VKM.Admin.Models.ViewModel;
+using VKM.Admin.Models.ViewModel.History;
+using VKM.Admin.Providers;
 using VKM.Admin.Services;
-using VKM.Admin.Services.Interfaces;
 
 namespace VKM.Admin.Controllers
 {
@@ -14,19 +15,20 @@ namespace VKM.Admin.Controllers
     public class HistoryController : Controller
     {
         private readonly Config config;
-        private readonly IDatabaseProvider databaseProvider;
+        private readonly HistoryService historyService;
         
         public HistoryController(IOptions<Config> config)
         {
             this.config = config.Value;
-            databaseProvider = new SqLiteDatabaseProvider(this.config.DatabaseConnectionString);
+            var databaseProvider = new SqLiteDatabaseProvider(this.config.DatabaseConnectionString);
+            historyService = new HistoryService(databaseProvider);
         }
         
         [HttpPost]
         [Route("")]
-        public IActionResult AddHistoryItem(HistoryItem historItem, int studentId)
+        public IActionResult AddHistoryItem(HistoryItemViewModel vm)
         {
-            databaseProvider.AddHistoryItem(historItem, studentId);
+            historyService.AddHistoryItem(vm);
 
             return Ok();
         }

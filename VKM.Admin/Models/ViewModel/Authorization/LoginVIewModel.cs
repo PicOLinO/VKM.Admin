@@ -1,6 +1,6 @@
-﻿namespace VKM.Admin.Models.Database
+﻿namespace VKM.Admin.Models.ViewModel.Authorization
 {
-    public class User
+    public class LoginViewModel
     {
         public string Login { get; set; }
         public string Password { get; set; }

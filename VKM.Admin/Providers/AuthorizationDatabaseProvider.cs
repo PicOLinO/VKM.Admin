@@ -1,9 +1,7 @@
-﻿using System;
-using Microsoft.Data.Sqlite;
-using VKM.Admin.Models.Database;
-using VKM.Admin.Services.Interfaces;
+﻿using Microsoft.Data.Sqlite;
+using VKM.Admin.Services.Authorization;
 
-namespace VKM.Admin.Services.Authorization
+namespace VKM.Admin.Providers
 {
     public class AuthorizationDatabaseProvider : SqLiteDatabaseProviderBase, IAuthorizationDatabaseProvider
     {
@@ -24,14 +22,11 @@ namespace VKM.Admin.Services.Authorization
                     {
                         while (reader.Read())
                         {
-                            var user = new User
-                            {
-                                Login = reader["Login"].ToString(),
-                                Password = reader["PasswordHash"].ToString()
-                            };
+                            var userLogin = reader["Login"].ToString();
+                            var userPassword = reader["PasswordHash"].ToString();
 
-                            var isPasswordsEquals = PasswordHasher.IsEqual(user.Password, password);
-                            if (!string.IsNullOrEmpty(user.Login) && isPasswordsEquals)
+                            var isPasswordsEquals = HashPasswordService.IsEqual(userPassword, password);
+                            if (!string.IsNullOrEmpty(userLogin) && isPasswordsEquals)
                             {
                                 return true;
                             }
@@ -44,14 +39,14 @@ namespace VKM.Admin.Services.Authorization
 
         public void Register(string userName, string password, int studentId)
         {
-            var hashedPassword = PasswordHasher.Hash(password);
+            var hashedPassword = HashPasswordService.Hash(password);
             var sql = $"INSERT INTO [User] (Login, PasswordHash, StudentID) VALUES ('{userName}', '{hashedPassword}', {studentId})";
             ExecuteNonQueryInternal(sql);
         }
 
         public void ResetPassword(string userName, string newPassword)
         {
-            var sql = $"UPDATE [User] SET [PasswordHash] = '{PasswordHasher.Hash(newPassword)}' WHERE [Login] = '{userName}'";
+            var sql = $"UPDATE [User] SET [PasswordHash] = '{HashPasswordService.Hash(newPassword)}' WHERE [Login] = '{userName}'";
             ExecuteNonQueryInternal(sql);
         }
     }

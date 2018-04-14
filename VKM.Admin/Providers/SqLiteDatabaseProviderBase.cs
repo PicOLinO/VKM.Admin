@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Data.Sqlite;
 
-namespace VKM.Admin.Services
+namespace VKM.Admin.Providers
 {
     public class SqLiteDatabaseProviderBase
     {

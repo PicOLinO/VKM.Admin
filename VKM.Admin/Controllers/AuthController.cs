@@ -5,9 +5,9 @@ using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
 using VKM.Admin.Models.Database;
 using VKM.Admin.Models.ViewModel;
+using VKM.Admin.Models.ViewModel.Authorization;
 using VKM.Admin.Services;
 using VKM.Admin.Services.Authorization;
-using IAuthorizationService = VKM.Admin.Services.Interfaces.IAuthorizationService;
 
 namespace VKM.Admin.Controllers
 {
@@ -16,7 +16,7 @@ namespace VKM.Admin.Controllers
     public class AuthController : Controller
     {
         private readonly Config config;
-        private readonly IAuthorizationService authorizationService;
+        private readonly AuthorizationService authorizationService;
         
         public AuthController(IConfiguration configuration, IOptions<Config> config)
         {
@@ -26,16 +26,16 @@ namespace VKM.Admin.Controllers
         
         [HttpPost]
         [Route("token")]
-        public IActionResult LoginStudent([FromBody]User user)
+        public IActionResult LoginStudent([FromBody]LoginViewModel vm)
         {
-            return Ok(new {token = authorizationService.Authorize(user.Login, user.Password)});
+            return Ok(new {token = authorizationService.Authorize(vm.Login, vm.Password)});
         }
 
         [HttpPost]
         [Route("register")]
-        public IActionResult RegisterStudent([FromBody]RegisterUserViewModel user)
+        public IActionResult RegisterStudent([FromBody]RegisterUserViewModel vm)
         {
-            authorizationService.Register(user.Login, user.Password, user.ConfirmPassword, user.StudentId);
+            authorizationService.Register(vm.Login, vm.Password, vm.ConfirmPassword, vm.StudentId);
 
             return Ok();
         }

@@ -1,4 +1,4 @@
-﻿namespace VKM.Admin.Models.ViewModel
+﻿namespace VKM.Admin.Models.ViewModel.Authorization
 {
     public class RegisterUserViewModel
     {

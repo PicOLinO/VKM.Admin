@@ -3,11 +3,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using VKM.Admin.Services.Interfaces;
+using VKM.Admin.Providers;
 
 namespace VKM.Admin.Services.Authorization
 {
-    public class AuthorizationService : IAuthorizationService
+    public class AuthorizationService
     {
         private readonly IAuthorizationDatabaseProvider databaseProvider;
 
