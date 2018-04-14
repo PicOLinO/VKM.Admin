@@ -39,5 +39,14 @@ namespace VKM.Admin.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        [Route("resetpwd")]
+        public IActionResult ResetPassword([FromBody]ResetPasswordViewModel vm)
+        {
+            authorizationService.ResetPassword(vm.UserName, vm.NewPassword);
+
+            return Ok();
+        }
     }
 }

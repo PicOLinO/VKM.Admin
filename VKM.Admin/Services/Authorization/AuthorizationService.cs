@@ -61,5 +61,10 @@ namespace VKM.Admin.Services.Authorization
             
             databaseProvider.Register(userName, password, studentId);
         }
+
+        public void ResetPassword(string userName, string newPassword)
+        {
+            databaseProvider.ResetPassword(userName, newPassword);
+        }
     }
 }

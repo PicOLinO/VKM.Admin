@@ -48,5 +48,11 @@ namespace VKM.Admin.Services.Authorization
             var sql = $"INSERT INTO [User] (Login, PasswordHash, StudentID) VALUES ('{userName}', '{hashedPassword}', {studentId})";
             ExecuteNonQueryInternal(sql);
         }
+
+        public void ResetPassword(string userName, string newPassword)
+        {
+            var sql = $"UPDATE [User] SET [PasswordHash] = '{PasswordHasher.Hash(newPassword)}' WHERE [Login] = '{userName}'";
+            ExecuteNonQueryInternal(sql);
+        }
     }
 }
