@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VKM.Admin.Models.Database.Domain;
 
 namespace VKM.Admin.Models.Database
 {

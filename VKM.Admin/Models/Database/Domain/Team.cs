@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace VKM.Admin.Models.Database
+namespace VKM.Admin.Models.Database.Domain
 {
     public class Team
     {
         public int Id { get; set; }
         public int Number { get; set; }
-        public List<Student> Students { get; set; }
     }
 }

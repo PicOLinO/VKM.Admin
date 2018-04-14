@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VKM.Admin.Models.Database;
+using VKM.Admin.Models.Database.Domain;
 using VKM.Admin.Models.ViewModel.Team;
 using VKM.Admin.Providers;
 
@@ -11,7 +12,7 @@ namespace VKM.Admin.Services
         {
         }
 
-        public IEnumerable<Team> GetAllTeamsWithStudents()
+        public IEnumerable<TeamWithParticipants> GetAllTeamsWithStudents()
         {
             var teamsWithStudents = DatabaseProvider.LoadTeamsAndStudents();
             return teamsWithStudents;

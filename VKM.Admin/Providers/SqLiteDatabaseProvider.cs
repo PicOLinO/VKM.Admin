@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using VKM.Admin.Models.Database;
+using VKM.Admin.Models.Database.Domain;
 
 namespace VKM.Admin.Providers
 {
@@ -12,7 +13,7 @@ namespace VKM.Admin.Providers
         {
         }
 
-        public IEnumerable<Team> LoadTeamsAndStudents()
+        public IEnumerable<TeamWithParticipants> LoadTeamsAndStudents()
         {
             var sql = @"SELECT 
                             [Team].[ID] as [TeamID],
@@ -26,7 +27,7 @@ namespace VKM.Admin.Providers
                                 LEFT JOIN [Student] 
                                     ON [Team].[ID] = [Student].[TeamID]";
 
-            var teams = new List<Team>();
+            var teams = new List<TeamWithParticipants>();
             using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
                 connection.Open();
@@ -40,7 +41,7 @@ namespace VKM.Admin.Providers
                             var currentTeam = teams.SingleOrDefault(t => t.Id == teamId);
                             if (currentTeam is null)
                             {
-                                currentTeam = new Team
+                                currentTeam = new TeamWithParticipants
                                 {
                                     Id = teamId,
                                     Number = int.Parse(reader["TeamNumber"].ToString()),
@@ -194,8 +195,7 @@ namespace VKM.Admin.Providers
                             var team = new Team
                             {
                                 Id = int.Parse(reader["TeamID"].ToString()),
-                                Number = int.Parse(reader["TeamNumber"].ToString()),
-                                Students = new List<Student>()
+                                Number = int.Parse(reader["TeamNumber"].ToString())
                             };
                             teams.Add(team);
                         }
