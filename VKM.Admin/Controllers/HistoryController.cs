@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VKM.Admin.Models;
@@ -8,6 +9,7 @@ using VKM.Admin.Services.Interfaces;
 
 namespace VKM.Admin.Controllers
 {
+    [Authorize]
     [Route("api/v1/history")]
     public class HistoryController : Controller
     {
