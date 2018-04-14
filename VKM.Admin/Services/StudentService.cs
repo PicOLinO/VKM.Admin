@@ -1,5 +1,6 @@
 ﻿using System;
 using VKM.Admin.Models.Database;
+using VKM.Admin.Models.Database.Domain;
 using VKM.Admin.Models.ViewModel.Student;
 using VKM.Admin.Providers;
 

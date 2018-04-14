@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VKM.Admin.Models.Database
+namespace VKM.Admin.Models.Database.Domain
 {
     public class HistoryItem
     {

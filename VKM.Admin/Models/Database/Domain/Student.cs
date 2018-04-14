@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using VKM.Admin.Models.Database.Domain;
-
-namespace VKM.Admin.Models.Database
+﻿namespace VKM.Admin.Models.Database.Domain
 {
     public class Student
     {
@@ -12,7 +9,6 @@ namespace VKM.Admin.Models.Database
         public string Group { get; set; }
         public Team Team { get; set; }
         public double AverageValue { get; set; }
-        public List<HistoryItem> History { get; set; }
 
         public string FullName => $"{LastName} {FirstName} {MiddleName}";
     }

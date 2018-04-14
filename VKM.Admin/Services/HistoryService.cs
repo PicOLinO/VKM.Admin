@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using VKM.Admin.Models.Database;
+using VKM.Admin.Models.Database.Domain;
 using VKM.Admin.Models.ViewModel;
 using VKM.Admin.Models.ViewModel.History;
 using VKM.Admin.Providers;
