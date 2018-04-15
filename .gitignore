@@ -8,3 +8,5 @@ VKM.Admin/obj/
 /VKM.Admin/Properties/launchSettings.json
 /VKM.Admin/VKM.Admin.csproj.user
 /VKM.Admin/App_Data/bak
+/VKM.Admin/Properties/PublishProfiles/CustomProfile.pubxml.user
+/VKM.Admin/Properties/PublishProfiles/CustomProfile.pubxml

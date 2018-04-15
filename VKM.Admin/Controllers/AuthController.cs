@@ -28,7 +28,7 @@ namespace VKM.Admin.Controllers
         [Route("token")]
         public IActionResult LoginStudent([FromBody]LoginViewModel vm)
         {
-            return Ok(new {token = authorizationService.Authorize(vm.Login, vm.Password)});
+            return Ok(new {token = authorizationService.Authorize(vm.UserName, vm.Password)});
         }
 
         [HttpPost]
