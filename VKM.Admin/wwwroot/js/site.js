@@ -28,6 +28,18 @@ function createJsTree() {
             "plugins": ["conditionalselect", "sort", "wholerow", "unique", "types", "contextmenu"]
         }
     );
+
+    $("#BaseTree")
+        .on("changed.jstree", function (e, data) {
+            jstreeSelectedItem = { id: data.node.data.jstree.id, type: data.node.data.jstree.type };
+            if (jstreeSelectedItem.type === "student") {
+                var parameter = { id: jstreeSelectedItem.id };
+                $.getJSON("api/v1/student", parameter, onStudentLoadedFromJsTreeChanged);
+            }
+            if (jstreeSelectedItem.type === "team") {
+                $("#StudentContent").hide();
+            }
+        });
 }
 
 function treeContextMenuSetup(node) {
@@ -80,7 +92,8 @@ function treeContextMenuSetup(node) {
                             type: "DELETE",
                             data: {id: node.data.jstree.id},
                             success: function () {
-                                location.reload();
+                                //location.reload();
+                                refillJsTree();
                             },
                             statusCode: {
                                 500: function (content) {
@@ -127,18 +140,6 @@ function treeContextMenuSetup(node) {
     return items;
 }
 
-$("#BaseTree")
-    .on("changed.jstree", function (e, data) {
-        jstreeSelectedItem = {id: data.node.data.jstree.id, type: data.node.data.jstree.type};
-        if (jstreeSelectedItem.type === "student") {
-            var parameter = {id: jstreeSelectedItem.id};
-            $.getJSON("api/v1/student", parameter, onStudentLoadedFromJsTreeChanged);
-        }
-        if (jstreeSelectedItem.type === "team") {
-            $("#StudentContent").hide();
-        }
-    });
-
 $('#m_SaveStudentButton').click(function () {
     addOrUpdateStudent("PUT");
 });
@@ -160,7 +161,8 @@ function addOrUpdateStudent(type) {
         type: type,
         contentType: "application/json; charset=UTF-8",
         success: function () {
-            location.reload();
+            //location.reload();
+            refillJsTree();
         },
         statusCode: {
             500: function (content) {
@@ -191,7 +193,8 @@ function addOrUpdateTeam(type) {
         type: type,
         contentType: "application/json; charset=UTF-8",
         success: function () {
-            location.reload();
+            refillJsTree();
+            //location.reload();
         },
         statusCode: {
             500: function (content) {
@@ -265,10 +268,11 @@ function resetModalDialogsFields() {
 
 function refillJsTree() {
     $.getJSON("api/v1/setup", function (data) {
+        $('#BaseTree').jstree("destroy");
         var html = "<ul>";
         $.each(data, function (index, value) {
             html = html + "<li data-jstree='{\"type\":\"team\",\"id\":\"" + value.id + "\"}'>" + value.number + " взвод<ul>";
-            $.each(data[0].students, function (index, value) {
+            $.each(data[index].students, function (index, value) {
                 html = html + "<li data-jstree='{\"type\":\"student\",\"id\":\"" + value.id + "\"}'>" + value.fullName + "</li>";
             });
             html = html + "</ul></li>";
