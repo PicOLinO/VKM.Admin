@@ -19,9 +19,9 @@ namespace VKM.Admin.Services
             return history;
         }
         
-        public void AddHistoryItem(HistoryItemViewModel vm)
+        public void AddHistoryItem(HistoryItemViewModel vm, int studentId)
         {
-            DatabaseProvider.AddHistoryItem(vm.AlgorithmName, vm.Date, vm.Value, vm.StudentId);
+            DatabaseProvider.AddHistoryItem(vm.AlgorithmName, vm.Date, vm.Value, studentId);
         }
     }
 }

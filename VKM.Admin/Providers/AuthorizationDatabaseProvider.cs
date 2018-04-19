@@ -9,9 +9,9 @@ namespace VKM.Admin.Providers
         {
         }
         
-        public bool Authorize(string userName, string password)
+        public int Authorize(string userName, string password)
         {
-            var sql = $"SELECT [Login], [PasswordHash] FROM [User] WHERE [Login] = '{userName}'";
+            var sql = $"SELECT [ID], [Login], [PasswordHash] FROM [User] WHERE [Login] = '{userName}'";
 
             using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
@@ -22,19 +22,20 @@ namespace VKM.Admin.Providers
                     {
                         while (reader.Read())
                         {
+                            var userId = int.Parse(reader["ID"].ToString());
                             var userLogin = reader["Login"].ToString();
                             var userPassword = reader["PasswordHash"].ToString();
 
                             var isPasswordsEquals = HashPasswordService.IsEqual(userPassword, password);
                             if (!string.IsNullOrEmpty(userLogin) && isPasswordsEquals)
                             {
-                                return true;
+                                return userId;
                             }
                         }
                     }
                 }
             }
-            return false;
+            return -1;
         }
 
         public void Register(string userName, string password, int studentId)

@@ -26,8 +26,8 @@ namespace VKM.Admin.Services.Authorization
         
         public string Authorize(string userName, string password)
         {
-            var isUserExistsAndPasswordCorrect = databaseProvider.Authorize(userName, password);
-            if (!isUserExistsAndPasswordCorrect)
+            var id = databaseProvider.Authorize(userName, password);
+            if (id < 0)
             {
                 throw new UnauthorizedAccessException();
             }
@@ -35,6 +35,7 @@ namespace VKM.Admin.Services.Authorization
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userName),
+                new Claim(JwtRegisteredClaimNames.Sid, id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

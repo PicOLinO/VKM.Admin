@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -26,9 +27,11 @@ namespace VKM.Admin.Controllers
         
         [HttpPost]
         [Route("")]
-        public IActionResult AddHistoryItem(HistoryItemViewModel vm)
+        public IActionResult AddHistoryItem([FromBody]HistoryItemViewModel vm)
         {
-            historyService.AddHistoryItem(vm);
+            var studentId = int.Parse(User.Claims.Single(c => c.Type == "sid").Value);
+
+            historyService.AddHistoryItem(vm, studentId);
 
             return Ok();
         }

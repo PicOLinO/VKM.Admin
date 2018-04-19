@@ -245,7 +245,7 @@ function onStudentLoadedFromJsTreeChanged(view) {
         function (index, value) {
             $("#CurrentStudentHistory")
                 .append('<tr>' +
-                    '<td>' + value.date +
+                    '<td>' + moment(value.date).format('DD.MM.YYYY HH:mm') +
                     '</td>' +
                     '<td>' + value.value +
                     '</td>' +
