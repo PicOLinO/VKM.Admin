@@ -44,6 +44,15 @@ namespace VKM.Admin.Controllers
             return Json(teamsAndStudents);
         }
 
+        [HttpGet]
+        [Route("api/v1/freestudents")]
+        public IActionResult TeamsWithStudentsWithoutLogins()
+        {
+            var teamsWithStudentsWithoutLogins = teamService.GetAllTeamsWithStudentsWithoutLogins();
+
+            return Json(teamsWithStudentsWithoutLogins);
+        }
+
         #region Student
 
         [HttpGet]

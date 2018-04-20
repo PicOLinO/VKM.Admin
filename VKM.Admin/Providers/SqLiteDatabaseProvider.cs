@@ -285,5 +285,58 @@ namespace VKM.Admin.Providers
             var sql = $"INSERT INTO [History] (StudentID, Value, Date, Algorithm) VALUES ({studentId}, {value}, '{date}', '{algorithmName}')";
             ExecuteNonQueryInternal(sql);
         }
+
+        public IEnumerable<TeamWithParticipants> LoadTeamsWithStudentsWithoutLogins()
+        {
+            var sql = $@"SELECT [Student].[ID] AS [StudentID], 
+                                [Student].[FirstName], 
+                                [Student].[LastName], 
+                                [Student].[MiddleName], 
+                                [Team].[Number] AS [TeamNumber],
+                                [Team].[ID] AS [TeamID]
+                            FROM 
+                                [Student] 
+                                INNER JOIN [Team] 
+                                    ON [Student].[TeamID] = [Team].[ID]
+                                LEFT JOIN [User]
+                                    ON [User].[StudentID] = [Student].[ID]
+                            WHERE
+                                [User].[ID] IS NULL";
+
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        var teams = new List<TeamWithParticipants>();
+                        while (reader.Read())
+                        {
+                            var teamId = int.Parse(reader["TeamID"].ToString());
+                            var team = teams.SingleOrDefault(t => t.Id == teamId) ?? new TeamWithParticipants
+                                                                                     {
+                                                                                         Id = teamId,
+                                                                                         Number = int.Parse(reader["TeamNumber"].ToString()),
+                                                                                         Students = new List<Student>()
+                                                                                     };
+                            var student = new Student
+                                          {
+                                              Id = int.Parse(reader["StudentID"].ToString()),
+                                              FirstName = reader["FirstName"].ToString(),
+                                              LastName = reader["LastName"].ToString(),
+                                              MiddleName = reader["MiddleName"].ToString()
+                                          };
+
+                            team.Students.Add(student);
+
+                            teams.Add(team);
+                        }
+
+                        return teams;
+                    }
+                }
+            }
+        }
     }
 }

@@ -19,5 +19,6 @@ namespace VKM.Admin.Providers
         int CreateTeam(int teamNumber);
         int CreateStudent(string firstName, string lastName, string middleName, string group, int teamId);
         void AddHistoryItem(string algorithmName, DateTime date, int value, int studentId);
+        IEnumerable<TeamWithParticipants> LoadTeamsWithStudentsWithoutLogins();
     }
 }
