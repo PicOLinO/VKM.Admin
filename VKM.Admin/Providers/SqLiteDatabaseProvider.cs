@@ -330,7 +330,10 @@ namespace VKM.Admin.Providers
 
                             team.Students.Add(student);
 
-                            teams.Add(team);
+                            if (!teams.Contains(team))
+                            {
+                                teams.Add(team);
+                            }
                         }
 
                         return teams;
