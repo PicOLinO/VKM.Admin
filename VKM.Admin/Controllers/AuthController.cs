@@ -35,7 +35,7 @@ namespace VKM.Admin.Controllers
         [Route("register")]
         public IActionResult RegisterStudent([FromBody]RegisterUserViewModel vm)
         {
-            authorizationService.Register(vm.Login, vm.Password, vm.ConfirmPassword, vm.StudentId);
+            authorizationService.Register(vm.Credential.UserName, vm.Credential.Password, vm.StudentId);
 
             return Ok();
         }

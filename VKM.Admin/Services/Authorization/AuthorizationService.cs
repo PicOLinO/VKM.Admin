@@ -53,13 +53,8 @@ namespace VKM.Admin.Services.Authorization
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public void Register(string userName, string password, string confirmPassword, int studentId)
+        public void Register(string userName, string password, int studentId)
         {
-            if (password != confirmPassword)
-            {
-                throw new Exception("Password must be equal to password confirmation");
-            }
-            
             databaseProvider.Register(userName, password, studentId);
         }
 
