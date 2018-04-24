@@ -170,7 +170,7 @@ namespace VKM.Admin.Providers
 
         public void RemoveStudentById(int id)
         {
-            var sql = $@"DELETE FROM [Student] WHERE [ID] = {id}";
+            var sql = $"DELETE FROM [Student] WHERE [ID] = {id}";
             ExecuteNonQueryInternal(sql);
         }
 
@@ -232,7 +232,7 @@ namespace VKM.Admin.Providers
 
         public void RemoveTeamById(int id)
         {
-            var sql = $"DELETE FROM [Student] WHERE [TeamID] = {id}; DELETE FROM [Team] WHERE [ID] = {id}";
+            var sql = $"DELETE FROM [Team] WHERE [ID] = {id}";
             ExecuteNonQueryInternal(sql);
         }
 

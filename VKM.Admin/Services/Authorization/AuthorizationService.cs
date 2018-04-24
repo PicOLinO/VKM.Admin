@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using VKM.Admin.Models.ViewModel.Authorization;
 using VKM.Admin.Providers;
 
 namespace VKM.Admin.Services.Authorization
@@ -10,6 +11,7 @@ namespace VKM.Admin.Services.Authorization
     public class AuthorizationService
     {
         private readonly IAuthorizationDatabaseProvider databaseProvider;
+        private readonly IDatabaseProvider baseDatabaseProvider;
 
         private readonly string issuer;
         private readonly string audience;
@@ -22,9 +24,10 @@ namespace VKM.Admin.Services.Authorization
             this.signingKey = signingKey;
             
             databaseProvider = new AuthorizationDatabaseProvider(databaseConnectionString);
+            baseDatabaseProvider = new SqLiteDatabaseProvider(databaseConnectionString);
         }
         
-        public string Authorize(string userName, string password)
+        public LoginResponseViewModel Authorize(string userName, string password)
         {
             var id = databaseProvider.Authorize(userName, password);
             if (id < 0)
@@ -50,7 +53,15 @@ namespace VKM.Admin.Services.Authorization
                     SecurityAlgorithms.HmacSha256)
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            var student = baseDatabaseProvider.LoadStudentById(id);
+
+            var result = new LoginResponseViewModel
+                           {
+                               Student = student,
+                               token = tokenString
+                           };
+            return result;
         }
 
         public void Register(string userName, string password, int studentId)
