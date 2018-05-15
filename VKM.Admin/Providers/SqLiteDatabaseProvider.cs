@@ -284,6 +284,42 @@ namespace VKM.Admin.Providers
         {
             var sql = $"INSERT INTO [History] (StudentID, Value, Date, Algorithm) VALUES ({studentId}, {value}, '{date}', '{algorithmName}')";
             ExecuteNonQueryInternal(sql);
+            RecalculateAverageValueForStudent(studentId);
+        }
+
+        private void RecalculateAverageValueForStudent(int studentId)
+        {
+            var average = Math.Round(GetStudentAverageScore(studentId), 2);
+
+            var sql = $"UPDATE [Student] SET [AverageScore] = {average.ToString(System.Globalization.CultureInfo.InvariantCulture)} WHERE [Student].[ID] = {studentId}";
+            ExecuteNonQueryInternal(sql);
+        }
+
+        private double GetStudentAverageScore(int studentId)
+        {
+            var sql = $@"SELECT SUM([History].[Value]) as [TotalValue], COUNT([History].[ID]) as [TotalCount] FROM [History] WHERE [History].[StudentID] = {studentId}";
+
+            using (var connection = new SqliteConnection(DatabaseConnectionString))
+            {
+                connection.Open();
+                using (var cmd = new SqliteCommand(sql, connection))
+                {
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        reader.Read();
+
+                        var totalValue = double.Parse(reader["TotalValue"].ToString());
+                        var totalCount = double.Parse(reader["TotalCount"].ToString());
+
+                        if (Math.Abs(totalCount) < 0)
+                        {
+                            return 0;
+                        }
+
+                        return totalValue / totalCount;
+                    }
+                }
+            }
         }
 
         public IEnumerable<TeamWithParticipants> LoadTeamsWithStudentsWithoutLogins()

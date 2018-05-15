@@ -11,7 +11,7 @@ namespace VKM.Admin.Providers
         
         public int Authorize(string userName, string password)
         {
-            var sql = $"SELECT [ID], [Login], [PasswordHash] FROM [User] WHERE [Login] = '{userName}'";
+            var sql = $"SELECT [StudentID], [Login], [PasswordHash] FROM [User] WHERE [Login] = '{userName}'";
 
             using (var connection = new SqliteConnection(DatabaseConnectionString))
             {
@@ -22,7 +22,7 @@ namespace VKM.Admin.Providers
                     {
                         while (reader.Read())
                         {
-                            var userId = int.Parse(reader["ID"].ToString());
+                            var userId = int.Parse(reader["StudentID"].ToString());
                             var userLogin = reader["Login"].ToString();
                             var userPassword = reader["PasswordHash"].ToString();
 
