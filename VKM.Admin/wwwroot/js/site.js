@@ -55,15 +55,6 @@ function treeContextMenuSetup(node) {
                 $("#EditStudentDialog").modal('show');
             }
         },
-        addTeam: {
-            label: "Добавить взвод",
-            action: function () {
-                $("#m_SaveTeamButton").hide();
-                $("#m_AddTeamButton").show();
-                resetModalDialogsFields();
-                $("#EditTeamDialog").modal('show');
-            }
-        },
         update: {
             label: "Изменить",
             action: function (data) {
@@ -134,11 +125,17 @@ function treeContextMenuSetup(node) {
 
     if (node.type === "student") {
         delete items.addStudent;
-        delete items.addTeam;
     }
 
     return items;
 }
+
+$('#addTeamButton').click(function() {
+    $("#m_SaveTeamButton").hide();
+    $("#m_AddTeamButton").show();
+    resetModalDialogsFields();
+    $("#EditTeamDialog").modal('show');
+});
 
 $('#m_SaveStudentButton').click(function () {
     addOrUpdateStudent("PUT");
