@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -28,6 +30,8 @@ namespace VKM.Admin.Controllers
         [Route("token")]
         public IActionResult LoginStudent([FromBody]LoginViewModel vm)
         {
+            ValidateCredentialLength(vm.UserName, vm.Password);
+
             var response = authorizationService.Authorize(vm.UserName, vm.Password);
             return Ok(response);
         }
@@ -36,6 +40,8 @@ namespace VKM.Admin.Controllers
         [Route("register")]
         public IActionResult RegisterStudent([FromBody]RegisterUserViewModel vm)
         {
+            ValidateCredentialLength(vm.Credential.UserName, vm.Credential.Password);
+
             authorizationService.Register(vm.Credential.UserName, vm.Credential.Password, vm.StudentId);
 
             return Ok();
@@ -48,6 +54,19 @@ namespace VKM.Admin.Controllers
             authorizationService.ResetPassword(vm.UserName, vm.NewPassword);
 
             return Ok();
+        }
+
+        private void ValidateCredentialLength(string userName, string password)
+        {
+            if (userName.Length < 3)
+            {
+                throw new UnauthorizedAccessException("Логин должен быть не менее 3 символов");
+            }
+
+            if (password.Length < 6)
+            {
+                throw new UnauthorizedAccessException("Пароль должен быть не менее 6 символов");
+            }
         }
     }
 }
